@@ -1026,10 +1026,16 @@ function showResult() {
 }
 
 function generateShareGrid() {
+  let tempCands = generateAllCandidates(answerK);
   return guesses.map((g, i) => {
     const fb = feedbacks[i];
-    const cells = g.map(c => c ? '\u2b1b' : '\u2b1c').join('');
-    return `${cells} ${fb}/9`;
+    const beforeCount = tempCands.length;
+    tempCands = filterCandidates(tempCands, g, fb);
+    const afterCount = tempCands.length;
+    const bits = beforeCount > 0 && afterCount > 0 ? Math.log2(beforeCount / afterCount) : 0;
+    const barLen = Math.round(bits / 3.32 * 5); // max ~3.32 bits = 5 blocks
+    const bar = '\u2588'.repeat(barLen) + '\u2591'.repeat(5 - barLen);
+    return `Q${i + 1} ${bar} ${bits.toFixed(2)}b`;
   }).join('\n');
 }
 
