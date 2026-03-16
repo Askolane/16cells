@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>9 Cells</title>
+
+<!-- Social sharing -->
+<meta name="description" content="A daily pattern puzzle. Find the hidden 3×3 grid in 6 turns using information theory.">
+<meta property="og:title" content="9 Cells">
+<meta property="og:description" content="A daily pattern puzzle. Find the hidden 3×3 grid in 6 turns.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="9 Cells">
+<meta name="twitter:description" content="A daily pattern puzzle. Find the hidden 3×3 grid in 6 turns.">
+
+<!-- PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="9 Cells">
+<meta name="theme-color" content="#0a0a0a">
+
+<!-- Favicon: 3x3 grid -->
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='2' y='2' width='8' height='8' rx='1.5' fill='%23e8e6e3'/><rect x='12' y='2' width='8' height='8' rx='1.5' fill='%23333'/><rect x='22' y='2' width='8' height='8' rx='1.5' fill='%23e8e6e3'/><rect x='2' y='12' width='8' height='8' rx='1.5' fill='%23333'/><rect x='12' y='12' width='8' height='8' rx='1.5' fill='%23e8e6e3'/><rect x='22' y='12' width='8' height='8' rx='1.5' fill='%23333'/><rect x='2' y='22' width='8' height='8' rx='1.5' fill='%23e8e6e3'/><rect x='12' y='22' width='8' height='8' rx='1.5' fill='%23e8e6e3'/><rect x='22' y='22' width='8' height='8' rx='1.5' fill='%23333'/></svg>">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #0a0a0a;
+  --surface: #161616;
+  --surface2: #1e1e1e;
+  --border: #2a2a2a;
+  --border-light: #3a3a3a;
+  --text: #e8e6e3;
+  --text-dim: #7a7876;
+  --text-dimmer: #4a4845;
+  --accent: #e8e6e3;
+  --cell-off: #1a1a1a;
+  --cell-on: #e8e6e3;
+  --cell-border: #333;
+  --success: #4ade80;
+  --success-dim: #166534;
+  --warning: #fbbf24;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Mono', monospace;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -webkit-tap-highlight-color: transparent;
+  overflow-x: hidden;
+}
+
+.game-container {
+  width: 100%;
+  max-width: 420px;
+  padding: 0 20px 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Header */
+header {
+  width: 100%;
+  max-width: 420px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.logo {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+
+.logo span { color: var(--text-dim); }
+
+.header-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.icon-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+  font-size: 16px;
+}
+
+.icon-btn:hover { border-color: var(--border-light); color: var(--text); }
+
+/* Hint area */
+.hint-area {
+  margin-top: 24px;
+  text-align: center;
+}
+
+.hint-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dimmer);
+  margin-bottom: 6px;
+}
+
+.hint-value {
+  font-family: 'Instrument Serif', serif;
+  font-size: 48px;
+  color: var(--text);
+  line-height: 1;
+}
+
+.hint-value span {
+  font-size: 20px;
+  color: var(--text-dim);
+  font-family: 'DM Mono', monospace;
+  font-weight: 300;
+}
+
+/* Remaining count */
+.remaining {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.remaining-count {
+  font-size: 14px;
+  color: var(--text-dim);
+  font-weight: 300;
+}
+
+.remaining-count b {
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Main grid */
+.grid-section {
+  margin-top: 24px;
+  position: relative;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  width: 180px;
+  height: 180px;
+}
+
+.input-cell {
+  background: var(--cell-off);
+  border: 1.5px solid var(--cell-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.1s;
+  position: relative;
+}
+
+.input-cell:active { transform: scale(0.92); }
+
+.input-cell.on {
+  background: var(--cell-on);
+  border-color: var(--cell-on);
+}
+
+.input-cell.locked {
+  cursor: default;
+  opacity: 0.5;
+}
+
+/* Submit */
+.submit-row {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.submit-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  padding: 10px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.5px;
+}
+
+.submit-btn:hover { opacity: 0.85; }
+.submit-btn:active { transform: scale(0.97); }
+.submit-btn:disabled { opacity: 0.2; cursor: default; transform: none; }
+
+.clear-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text-dim);
+  padding: 10px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.clear-btn:hover { border-color: var(--border-light); color: var(--text); }
+
+/* Guess history */
+.history {
+  margin-top: 28px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.guess-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  animation: slideIn 0.25s ease;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.guess-num {
+  font-size: 11px;
+  color: var(--text-dimmer);
+  font-weight: 300;
+  min-width: 16px;
+}
+
+.mini-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.mini-cell {
+  border-radius: 2px;
+  background: var(--cell-off);
+  border: 0.5px solid var(--border);
+}
+
+.mini-cell.on {
+  background: var(--cell-on);
+  border-color: var(--cell-on);
+}
+
+.guess-feedback {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.match-display {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--text-dim);
+  min-width: 32px;
+}
+
+.match-display b {
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.bits-display {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  color: var(--text);
+  flex: 1;
+  text-align: right;
+}
+
+.bits-display span {
+  font-size: 12px;
+  font-family: 'DM Mono', monospace;
+  color: var(--text-dimmer);
+  font-weight: 300;
+}
+
+.eliminated {
+  font-size: 11px;
+  color: var(--text-dimmer);
+  font-weight: 300;
+  white-space: nowrap;
+  min-width: 32px;
+  text-align: right;
+}
+
+/* Candidates reveal */
+.candidates-area {
+  margin-top: 20px;
+  width: 100%;
+  text-align: center;
+}
+
+.candidates-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--text-dimmer);
+  margin-bottom: 12px;
+}
+
+.candidates-grid {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.candidate-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 8px;
+  border: 1.5px solid transparent;
+  transition: all 0.15s;
+}
+
+.candidate-item:hover { border-color: var(--border-light); }
+.candidate-item.selected { border-color: var(--text); }
+
+.candidate-mini {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  width: 48px;
+  height: 48px;
+}
+
+.candidate-mini .mini-cell {
+  border-radius: 3px;
+}
+
+/* Result overlay */
+.result-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+  padding: 20px;
+}
+
+.result-overlay.active { display: flex; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 32px;
+  max-width: 340px;
+  width: 100%;
+  text-align: center;
+  animation: popIn 0.35s ease;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.result-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  margin-bottom: 4px;
+}
+
+.result-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+.result-answer {
+  margin: 0 auto 24px;
+  display: flex;
+  justify-content: center;
+}
+
+.result-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--text-dimmer);
+  margin-top: 2px;
+}
+
+.result-share {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.share-preview {
+  font-size: 12px;
+  color: var(--text-dim);
+  background: var(--bg);
+  padding: 12px;
+  border-radius: 8px;
+  line-height: 1.6;
+  text-align: left;
+  font-family: 'DM Mono', monospace;
+  white-space: pre;
+  -webkit-user-select: all;
+  user-select: all;
+}
+
+.share-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.share-btn:hover { opacity: 0.85; }
+
+.close-result {
+  margin-top: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  background: none;
+  border: none;
+  color: var(--text-dimmer);
+  cursor: pointer;
+  padding: 8px;
+}
+
+.close-result:hover { color: var(--text-dim); }
+
+/* Help modal */
+.help-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 100;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.help-overlay.active { display: flex; }
+
+.help-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 380px;
+  width: 100%;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.help-card h2 {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+.help-card p {
+  font-size: 13px;
+  color: var(--text-dim);
+  line-height: 1.7;
+  margin-bottom: 12px;
+  font-weight: 300;
+}
+
+.help-card .hl { color: var(--text); font-weight: 400; }
+
+.help-close {
+  margin-top: 16px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.turn-indicator {
+  font-size: 11px;
+  color: var(--text-dimmer);
+  font-weight: 300;
+  margin-top: 12px;
+}
+
+.bits-info {
+  font-size: 11px;
+  color: var(--text-dimmer);
+  font-weight: 300;
+  margin-top: 4px;
+}
+
+/* Toast */
+.toast {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%) translateY(-20px);
+  background: var(--text);
+  color: var(--bg);
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  opacity: 0;
+  transition: all 0.3s;
+  z-index: 200;
+  pointer-events: none;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">9 Cells</div>
+  <div class="header-actions">
+    <button class="icon-btn" id="result-btn" onclick="showResult()" title="Results" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="8" width="3" height="7" rx="0.5"/><rect x="6.5" y="4" width="3" height="11" rx="0.5"/><rect x="12" y="1" width="3" height="14" rx="0.5"/></svg></button>
+    <button class="icon-btn" onclick="showHelp()" title="How to play">?</button>
+  </div>
+</header>
+
+<div class="game-container">
+  <div class="hint-area">
+    <div class="hint-label">White cells</div>
+    <div class="hint-value"><span id="hint-count">?</span></div>
+  </div>
+
+  <div class="remaining">
+    <div class="remaining-count"><b id="remaining-num">-</b> possible patterns</div>
+  </div>
+
+  <div class="grid-section">
+    <div class="input-grid" id="input-grid"></div>
+  </div>
+
+  <div class="submit-row">
+    <button class="clear-btn" onclick="clearGrid()">clear</button>
+    <button class="submit-btn" id="submit-btn" onclick="submitGuess()">submit</button>
+  </div>
+
+  <div class="turn-indicator" id="turn-indicator"></div>
+
+  <div class="candidates-area" id="candidates-area" style="display:none">
+    <div class="candidates-label">Remaining candidates</div>
+    <div class="candidates-grid" id="candidates-grid"></div>
+  </div>
+
+  <div class="history" id="history"></div>
+</div>
+
+<!-- Result overlay -->
+<div class="result-overlay" id="result-overlay">
+  <div class="result-card">
+    <div class="result-title" id="result-title"></div>
+    <div class="result-subtitle" id="result-subtitle"></div>
+    <div class="result-answer" id="result-answer"></div>
+    <div class="result-stats">
+      <div class="stat">
+        <div class="stat-value" id="stat-turns">-</div>
+        <div class="stat-label">Turns</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="stat-optimal">-</div>
+        <div class="stat-label">Optimal</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="stat-bits">-</div>
+        <div class="stat-label">Bits/turn</div>
+      </div>
+    </div>
+    <div class="result-share">
+      <div class="share-preview" id="share-preview"></div>
+      <button class="share-btn" id="share-btn" onclick="copyShare()">Copy result</button>
+    </div>
+    <button class="close-result" onclick="closeResult()">close</button>
+  </div>
+</div>
+
+<!-- Help overlay -->
+<div class="help-overlay" id="help-overlay" onclick="closeHelp(event)">
+  <div class="help-card" onclick="event.stopPropagation()">
+    <h2>How to play</h2>
+    <p>Find the hidden <span class="hl">3&times;3 black &amp; white pattern</span> in 6 turns or fewer.</p>
+    <p>You start with a hint: the <span class="hl">number of white cells</span> in the answer. Tap cells to toggle them, then submit your guess.</p>
+    <p>After each guess, you'll see how many cells <span class="hl">match exactly</span> between your pattern and the answer. Use this to narrow down the possibilities.</p>
+    <p>When 5 or fewer candidates remain, they'll be <span class="hl">revealed</span> &mdash; click one to set it as your next guess.</p>
+    <p>A new puzzle every day. The <span class="hl">fewer turns</span> you use, the better your score.</p>
+    <p style="color:var(--text-dimmer);font-size:11px;margin-top:16px;">Tip: choose patterns that split the remaining possibilities as evenly as possible. That's maximum information per turn.</p>
+    <button class="help-close" onclick="closeHelp()">Got it</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ============================================================
+// Seeded RNG
+// ============================================================
+function mulberry32(seed) {
+  return function() {
+    seed |= 0; seed = seed + 0x6D2B79F5 | 0;
+    let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+
+function dateToSeed(d) {
+  const s = `${d.getFullYear()}${d.getMonth()}${d.getDate()}`;
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h) + s.charCodeAt(i);
+    h |= 0;
+  }
+  return h;
+}
+
+// ============================================================
+// Core game logic
+// ============================================================
+const GRID = 9;
+const MAX_TURNS = 6;
+
+function matchCount(a, b) {
+  let m = 0;
+  for (let i = 0; i < GRID; i++) {
+    if (a[i] === b[i]) m++;
+  }
+  return m;
+}
+
+function countBlack(p) {
+  return p.reduce((s, v) => s + v, 0);
+}
+
+function generateAllCandidates(k) {
+  const result = [];
+  function combo(start, chosen) {
+    if (chosen.length === k) {
+      const p = new Array(9).fill(0);
+      chosen.forEach(i => p[i] = 1);
+      result.push(p);
+      return;
+    }
+    if (start >= 9) return;
+    if (9 - start < k - chosen.length) return;
+    combo(start + 1, [...chosen, start]);
+    combo(start + 1, chosen);
+  }
+  combo(0, []);
+  return result;
+}
+
+function filterCandidates(candidates, guess, feedback) {
+  return candidates.filter(c => matchCount(c, guess) === feedback);
+}
+
+function patternKey(p) { return p.join(''); }
+function patternsEqual(a, b) {
+  for (let i = 0; i < 9; i++) if (a[i] !== b[i]) return false;
+  return true;
+}
+
+// ============================================================
+// Game state
+// ============================================================
+let answer = null;
+let answerK = 0;
+let candidates = [];
+let guesses = [];
+let feedbacks = [];
+let inputGrid = [0,0,0,0,0,0,0,0,0];
+let gameOver = false;
+let won = false;
+let totalBitsGained = 0;
+
+function puzzleNumber() {
+  const epoch = new Date(2025, 0, 1);
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  epoch.setHours(0,0,0,0);
+  return Math.floor((today - epoch) / 86400000);
+}
+
+function initGame() {
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const seed = dateToSeed(today);
+  const rng = mulberry32(seed);
+
+  // Generate answer (restricted to 3-7 white cells)
+  do {
+    answer = new Array(9).fill(0);
+    for (let i = 0; i < 9; i++) {
+      answer[i] = rng() < 0.5 ? 1 : 0;
+    }
+    answerK = countBlack(answer);
+  } while (answerK < 3 || answerK > 7);
+  candidates = generateAllCandidates(answerK);
+
+  guesses = [];
+  feedbacks = [];
+  inputGrid = [0,0,0,0,0,0,0,0,0];
+  gameOver = false;
+  won = false;
+  totalBitsGained = 0;
+
+  // Load saved state
+  const saved = localStorage.getItem('9cells_' + puzzleNumber());
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      let tempCandidates = generateAllCandidates(answerK);
+      data.guesses.forEach((g, i) => {
+        const fb = data.feedbacks[i];
+        guesses.push(g);
+        feedbacks.push(fb);
+        const before = tempCandidates.length;
+        tempCandidates = filterCandidates(tempCandidates, g, fb);
+        if (before > 0 && tempCandidates.length > 0) {
+          totalBitsGained += Math.log2(before / tempCandidates.length);
+        }
+      });
+      candidates = tempCandidates;
+      gameOver = data.gameOver || false;
+      won = data.won || false;
+    } catch(e) {}
+  }
+
+  render();
+
+  if (gameOver) {
+    setTimeout(() => showResult(), 300);
+  }
+}
+
+function saveState() {
+  localStorage.setItem('9cells_' + puzzleNumber(), JSON.stringify({
+    guesses, feedbacks, gameOver, won
+  }));
+}
+
+// ============================================================
+// Rendering
+// ============================================================
+function render() {
+  // Hint
+  document.getElementById('hint-count').textContent = answerK;
+
+  // Remaining
+  document.getElementById('remaining-num').textContent = candidates.length;
+
+  // Turn indicator
+  const turnsUsed = guesses.length;
+  const turnsLeft = MAX_TURNS - turnsUsed;
+  if (!gameOver) {
+    document.getElementById('turn-indicator').textContent =
+      `Turn ${turnsUsed + 1} of ${MAX_TURNS}`;
+  } else {
+    document.getElementById('turn-indicator').textContent = '';
+  }
+
+  // Input grid
+  renderInputGrid();
+
+  // Submit button
+  const btn = document.getElementById('submit-btn');
+  btn.disabled = gameOver;
+
+  // Show result button in header after game ends
+  document.getElementById('result-btn').style.display = gameOver ? '' : 'none';
+
+  // History
+  renderHistory();
+
+  // Candidates reveal
+  renderCandidates();
+}
+
+function renderInputGrid() {
+  const grid = document.getElementById('input-grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement('div');
+    cell.className = 'input-cell' + (inputGrid[i] ? ' on' : '') + (gameOver ? ' locked' : '');
+    if (!gameOver) {
+      cell.addEventListener('click', () => {
+        inputGrid[i] = inputGrid[i] ? 0 : 1;
+        renderInputGrid();
+      });
+    }
+    grid.appendChild(cell);
+  }
+}
+
+function renderHistory() {
+  const hist = document.getElementById('history');
+  hist.innerHTML = '';
+  let tempCands = generateAllCandidates(answerK);
+
+  guesses.forEach((g, idx) => {
+    const fb = feedbacks[idx];
+    const beforeCount = tempCands.length;
+    tempCands = filterCandidates(tempCands, g, fb);
+    const afterCount = tempCands.length;
+    const eliminated = beforeCount - afterCount;
+    const bits = beforeCount > 0 && afterCount > 0 ? Math.log2(beforeCount / afterCount) : 0;
+
+    const row = document.createElement('div');
+    row.className = 'guess-row';
+    row.innerHTML = `
+      <div class="guess-num">${idx + 1}</div>
+      ${miniGridHTML(g)}
+      <div class="guess-feedback">
+        <div class="match-display"><b>${fb}</b>/9</div>
+        <div class="bits-display">${bits.toFixed(2)} <span>bits</span></div>
+        <div class="eliminated">&minus;${eliminated}</div>
+      </div>
+    `;
+    hist.appendChild(row);
+  });
+}
+
+function miniGridHTML(pattern, size) {
+  const cls = size === 'large' ? 'candidate-mini' : 'mini-grid';
+  let html = `<div class="${cls}">`;
+  for (let i = 0; i < 9; i++) {
+    html += `<div class="mini-cell${pattern[i] ? ' on' : ''}"></div>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function renderCandidates() {
+  const area = document.getElementById('candidates-area');
+  const grid = document.getElementById('candidates-grid');
+
+  if (candidates.length > 5 || candidates.length <= 0 || gameOver) {
+    area.style.display = 'none';
+    return;
+  }
+
+  area.style.display = 'block';
+  grid.innerHTML = '';
+
+  candidates.forEach(c => {
+    const item = document.createElement('div');
+    item.className = 'candidate-item';
+    if (patternsEqual(inputGrid, c)) item.classList.add('selected');
+    item.innerHTML = miniGridHTML(c, 'large');
+    item.addEventListener('click', () => {
+      inputGrid = [...c];
+      render();
+    });
+    grid.appendChild(item);
+  });
+}
+
+// ============================================================
+// Game actions
+// ============================================================
+function submitGuess() {
+  if (gameOver) return;
+  if (guesses.length >= MAX_TURNS) return;
+
+  const guess = [...inputGrid];
+  const fb = matchCount(guess, answer);
+
+  const beforeCount = candidates.length;
+  guesses.push(guess);
+  feedbacks.push(fb);
+
+  candidates = filterCandidates(candidates, guess, fb);
+  const afterCount = candidates.length;
+
+  if (beforeCount > 0 && afterCount > 0) {
+    totalBitsGained += Math.log2(beforeCount / afterCount);
+  }
+
+  // Check win (exact match only - must submit the correct pattern)
+  if (fb === 9) {
+    won = true;
+    gameOver = true;
+  } else if (guesses.length >= MAX_TURNS) {
+    gameOver = true;
+    won = false;
+  }
+
+  // Clear input for next turn
+  if (!gameOver) {
+    inputGrid = [0,0,0,0,0,0,0,0,0];
+  }
+
+  saveState();
+  render();
+
+  if (gameOver) {
+    setTimeout(() => showResult(), 600);
+  }
+}
+
+function clearGrid() {
+  if (gameOver) return;
+  inputGrid = [0,0,0,0,0,0,0,0,0];
+  renderInputGrid();
+  renderCandidates();
+}
+
+// ============================================================
+// Results
+// ============================================================
+function showResult() {
+  const overlay = document.getElementById('result-overlay');
+  overlay.classList.add('active');
+
+  const turnsUsed = guesses.length;
+  const bitsPerTurn = turnsUsed > 0 ? (totalBitsGained / turnsUsed) : 0;
+
+  // Theoretical minimum
+  const totalCandidates = generateAllCandidates(answerK).length;
+  const totalBits = Math.log2(totalCandidates);
+  const maxBitsPerTurn = Math.log2(10);
+  const theoretical = Math.ceil(totalBits / maxBitsPerTurn);
+
+  document.getElementById('result-title').textContent = won ? 'Solved' : 'Not quite';
+  document.getElementById('result-subtitle').textContent =
+    won ? `Puzzle #${puzzleNumber()}` : `The answer was:`;
+
+  document.getElementById('result-answer').innerHTML = miniGridHTML(answer, 'large');
+
+  document.getElementById('stat-turns').textContent = won ? turnsUsed : 'X';
+  document.getElementById('stat-optimal').textContent = theoretical;
+  document.getElementById('stat-bits').textContent = bitsPerTurn.toFixed(1);
+
+  // Share text
+  const shareText = `9 Cells #${puzzleNumber()} ${won ? turnsUsed : 'X'}/6\n\n${generateShareGrid()}\n\nBits/turn: ${bitsPerTurn.toFixed(2)}`;
+  document.getElementById('share-preview').textContent = shareText;
+  document.getElementById('share-preview').dataset.text = shareText;
+  document.getElementById('share-btn').textContent = navigator.share ? 'Share result' : 'Copy result';
+}
+
+function generateShareGrid() {
+  return guesses.map((g, i) => {
+    const fb = feedbacks[i];
+    const cells = g.map(c => c ? '\u2b1b' : '\u2b1c').join('');
+    return `${cells} ${fb}/9`;
+  }).join('\n');
+}
+
+function copyShare() {
+  const text = document.getElementById('share-preview').dataset.text;
+
+  // Try native share sheet first (mobile)
+  if (navigator.share) {
+    navigator.share({ text }).then(() => {
+      showToast('Shared');
+    }).catch(e => {
+      if (e.name !== 'AbortError') clipboardCopy(text);
+    });
+    return;
+  }
+
+  clipboardCopy(text);
+}
+
+function clipboardCopy(text) {
+  // Modern clipboard API (needs HTTPS)
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text).then(() => {
+      showToast('Copied to clipboard');
+    }).catch(() => {
+      textareaCopy(text);
+    });
+    return;
+  }
+  textareaCopy(text);
+}
+
+function textareaCopy(text) {
+  const ta = document.createElement('textarea');
+  ta.value = text;
+  ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;left:-9999px;top:0;opacity:0;font-size:16px';
+  document.body.appendChild(ta);
+
+  if (/ipad|iphone/i.test(navigator.userAgent)) {
+    const range = document.createRange();
+    range.selectNodeContents(ta);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    ta.setSelectionRange(0, text.length);
+  } else {
+    ta.select();
+  }
+
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch(e) {}
+  document.body.removeChild(ta);
+  showToast(ok ? 'Copied to clipboard' : 'Long press the text above to copy');
+}
+
+function closeResult() {
+  document.getElementById('result-overlay').classList.remove('active');
+}
+
+// ============================================================
+// Help
+// ============================================================
+function showHelp() {
+  document.getElementById('help-overlay').classList.add('active');
+}
+
+function closeHelp(e) {
+  if (!e || e.target === document.getElementById('help-overlay')) {
+    document.getElementById('help-overlay').classList.remove('active');
+  }
+}
+
+// ============================================================
+// Toast
+// ============================================================
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ============================================================
+// Init
+// ============================================================
+initGame();
+
+// Show help on first visit
+if (!localStorage.getItem('9cells_visited')) {
+  localStorage.setItem('9cells_visited', '1');
+  showHelp();
+}
+</script>
+
+</body>
+</html>
