@@ -10,9 +10,14 @@
 <meta property="og:title" content="9 Cells">
 <meta property="og:description" content="A daily pattern puzzle. Find the hidden 3×3 grid in 6 turns.">
 <meta property="og:type" content="website">
-<meta name="twitter:card" content="summary">
+<meta property="og:url" content="https://askolane.github.io/9cells/">
+<meta property="og:image" content="https://askolane.github.io/9cells/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="9 Cells">
 <meta name="twitter:description" content="A daily pattern puzzle. Find the hidden 3×3 grid in 6 turns.">
+<meta name="twitter:image" content="https://askolane.github.io/9cells/og-image.png">
 
 <!-- PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -1014,7 +1019,7 @@ function showResult() {
   document.getElementById('stat-bits').textContent = bitsPerTurn.toFixed(1);
 
   // Share text
-  const shareText = `9 Cells #${puzzleNumber()} ${won ? turnsUsed : 'X'}/6\n\n${generateShareGrid()}\n\nBits/turn: ${bitsPerTurn.toFixed(2)}`;
+  const shareText = `9 Cells #${puzzleNumber()} ${won ? turnsUsed : 'X'}/6\n\n${generateShareGrid()}\n\nBits/turn: ${bitsPerTurn.toFixed(2)}\nhttps://askolane.github.io/9cells/`;
   document.getElementById('share-preview').textContent = shareText;
   document.getElementById('share-preview').dataset.text = shareText;
   document.getElementById('share-btn').textContent = navigator.share ? 'Share result' : 'Copy result';
