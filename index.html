@@ -5,16 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>16 Cells</title>
 
-<meta name="description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 10 turns using information theory.">
+<meta name="description" content="A hardcore pattern puzzle powered by information theory. Find the hidden 4×4 grid in 10 turns.">
 <meta property="og:title" content="16 Cells">
 <meta property="og:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 10 turns.">
 <meta property="og:type" content="website">
+<meta property="og:url" content="https://askolane.github.io/16cells/">
+<meta property="og:image" content="https://askolane.github.io/16cells/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="16 Cells">
+<meta name="twitter:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 10 turns.">
+<meta name="twitter:image" content="https://askolane.github.io/16cells/og-image.png">
 
 <!-- PWA -->
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="16 Cells">
 <meta name="theme-color" content="#0a0a0a">
+<link rel="manifest" href="manifest.json">
 
 <!-- Favicon: 4x4 grid -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='1' y='1' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='9' y='1' width='6' height='6' rx='1' fill='%23333'/><rect x='17' y='1' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='25' y='1' width='6' height='6' rx='1' fill='%23333'/><rect x='1' y='9' width='6' height='6' rx='1' fill='%23333'/><rect x='9' y='9' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='17' y='9' width='6' height='6' rx='1' fill='%23333'/><rect x='25' y='9' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='1' y='17' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='9' y='17' width='6' height='6' rx='1' fill='%23333'/><rect x='17' y='17' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='25' y='17' width='6' height='6' rx='1' fill='%23333'/><rect x='1' y='25' width='6' height='6' rx='1' fill='%23333'/><rect x='9' y='25' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='17' y='25' width='6' height='6' rx='1' fill='%23333'/><rect x='25' y='25' width='6' height='6' rx='1' fill='%23e8e6e3'/></svg>">
@@ -731,7 +740,7 @@ header {
 
   <div class="submit-row">
     <button class="clear-btn" onclick="clearGrid()">clear</button>
-    <button class="submit-btn" id="submit-btn" onclick="submitGuess()">submit</button>
+    <button class="submit-btn" id="submit-btn">submit</button>
   </div>
 
   <div class="turn-indicator" id="turn-indicator"></div>
@@ -1134,7 +1143,21 @@ function render() {
   renderInputGrid();
 
   // Submit button
-  document.getElementById('submit-btn').disabled = gameOver;
+  // Submit button
+  const btn = document.getElementById('submit-btn');
+  if (gameOver && currentMode === 'random') {
+    btn.disabled = false;
+    btn.textContent = 'next puzzle';
+    btn.onclick = function() { playTap(); nextPuzzle(); };
+  } else if (gameOver) {
+    btn.disabled = true;
+    btn.textContent = 'submit';
+    btn.onclick = submitGuess;
+  } else {
+    btn.disabled = false;
+    btn.textContent = 'submit';
+    btn.onclick = submitGuess;
+  }
 
   // Show result button in header after game ends
   document.getElementById('result-btn').style.display = gameOver ? '' : 'none';
@@ -1288,9 +1311,12 @@ function submitGuess() {
   render();
 
   if (gameOver) {
+    document.getElementById('submit-btn').disabled = true;
     setTimeout(() => {
       if (won) playSuccess(); else playFail();
       showResult();
+      document.getElementById('submit-btn').disabled = false;
+      render();
     }, 600);
   }
 }
@@ -1462,6 +1488,11 @@ initGame();
 if (!localStorage.getItem('16cells_visited')) {
   localStorage.setItem('16cells_visited', '1');
   showHelp();
+}
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 </script>
 
