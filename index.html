@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>16 Cells</title>
 
-<meta name="description" content="A hardcore pattern puzzle powered by information theory. Find the hidden 4×4 grid in 10 turns.">
+<meta name="description" content="A hardcore pattern puzzle powered by information theory. Find the hidden 4×4 grid in 8 turns.">
 <meta property="og:title" content="16 Cells">
-<meta property="og:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 10 turns.">
+<meta property="og:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 8 turns.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://askolane.github.io/16cells/">
 <meta property="og:image" content="https://askolane.github.io/16cells/og-image.png">
@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="16 Cells">
-<meta name="twitter:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 10 turns.">
+<meta name="twitter:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 8 turns.">
 <meta name="twitter:image" content="https://askolane.github.io/16cells/og-image.png">
 
 <!-- PWA -->
@@ -791,7 +791,7 @@ header {
 <div class="help-overlay" id="help-overlay" onclick="closeHelp(event)">
   <div class="help-card" onclick="event.stopPropagation()">
     <h2>How to play</h2>
-    <p>Find the hidden <span class="hl">4&times;4 black &amp; white pattern</span> in 10 turns or fewer.</p>
+    <p>Find the hidden <span class="hl">4&times;4 black &amp; white pattern</span> in 8 turns or fewer.</p>
     <p>You start with a hint: the <span class="hl">number of white cells</span> in the answer. Tap cells to toggle them, then submit your guess.</p>
     <p>After each guess, you'll see how many cells <span class="hl">match exactly</span> between your pattern and the answer. Use this to narrow down the possibilities.</p>
     <p>When 5 or fewer candidates remain, they'll be <span class="hl">revealed</span> &mdash; click one to set it as your next guess.</p>
@@ -927,7 +927,7 @@ function dateToSeed(d) {
 // ============================================================
 const GRID = 16;
 const COLS = 4;
-const MAX_TURNS = 10;
+const MAX_TURNS = 8;
 const MIN_K = 4;
 const MAX_K = 13;
 
@@ -1366,7 +1366,7 @@ function showResult() {
 
   // Share text
   const prefix = currentMode === 'daily' ? `16 Cells Daily #${puzzleNumber()}` : '16 Cells';
-  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/10\n\n${generateShareGrid()}\n\nBits/turn: ${bitsPerTurn.toFixed(2)}`;
+  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/8\n\n${generateShareGrid()}\n\nBits/turn: ${bitsPerTurn.toFixed(2)}`;
   document.getElementById('share-preview').textContent = shareText;
   document.getElementById('share-preview').dataset.text = shareText;
   document.getElementById('share-btn').textContent = navigator.share ? 'Share' : 'Copy';
