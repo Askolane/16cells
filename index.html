@@ -793,11 +793,11 @@ header {
     <h2>How to play</h2>
     <p>Find the hidden <span class="hl">4&times;4 black &amp; white pattern</span> in 8 turns or fewer.</p>
     <p>You start with a hint: the <span class="hl">number of white cells</span> in the answer. Tap cells to toggle them, then submit your guess.</p>
-    <p>After each guess, you'll see how many cells <span class="hl">match exactly</span> between your pattern and the answer. Use this to narrow down the possibilities.</p>
+    <p>After each guess, you'll see how many <span class="hl">white cells you got right</span>. Use this to narrow down the possibilities.</p>
     <p>When 5 or fewer candidates remain, they'll be <span class="hl">revealed</span> &mdash; click one to set it as your next guess.</p>
     <p style="margin-top:16px;margin-bottom:4px;color:var(--text);font-weight:400;font-size:13px;">The information theory behind it</p>
     <p>Each puzzle has a certain number of <span class="hl">bits</span> of information needed to identify the answer. For example, if there are 3,003 possible patterns, you need <span class="hl">~11.6 bits</span> to narrow it down to one.</p>
-    <p>Every guess you make reveals some bits of information through the match count. Once your <span class="hl">total gained bits</span> reaches the required amount, only one possibility remains &mdash; the answer is determined.</p>
+    <p>Every guess you make reveals some bits of information through the feedback. Once your <span class="hl">total gained bits</span> reaches the required amount, only one possibility remains &mdash; the answer is determined.</p>
     <p>The progress bar below the grid tracks this: <span class="hl">gained / required bits</span>. Maximizing bits per turn is the key to solving in fewer guesses.</p>
     <p><span class="hl">Endless mode:</span> Infinite puzzles. Keep your streak alive.</p>
     <p><span class="hl">Daily mode:</span> Same puzzle for everyone. Compare scores.</p>
@@ -1200,6 +1200,8 @@ function renderHistory() {
 
   guesses.forEach((g, idx) => {
     const fb = feedbacks[idx];
+    const j = countWhite(g);
+    const whiteHits = (fb + j + answerK - GRID) / 2;
     const beforeCount = tempCands.length;
     tempCands = filterCandidates(tempCands, g, fb);
     const afterCount = tempCands.length;
@@ -1212,7 +1214,7 @@ function renderHistory() {
       <div class="guess-num">${idx + 1}</div>
       ${miniGridHTML(g)}
       <div class="guess-feedback">
-        <div class="match-display"><b>${fb}</b>/16</div>
+        <div class="match-display"><b>${whiteHits}</b>/${answerK}</div>
         <div class="bits-display">${bits.toFixed(2)} <span>bits</span></div>
         <div class="eliminated">&minus;${eliminated}</div>
       </div>
