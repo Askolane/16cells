@@ -1269,15 +1269,6 @@ function renderInputGrid() {
         cell.className = 'input-cell' + (inputGrid[i] ? ' on' : '');
         playTok();
       });
-
-      cell.addEventListener('pointerenter', () => {
-        if (gridDragging && !gridDraggedCells.has(i)) {
-          gridDraggedCells.add(i);
-          inputGrid[i] = gridDragValue;
-          cell.className = 'input-cell' + (inputGrid[i] ? ' on' : '');
-          playTok();
-        }
-      });
     }
     grid.appendChild(cell);
   }
@@ -1288,10 +1279,22 @@ function renderInputGrid() {
       renderCandidates();
     }
   };
-  grid.onpointerleave = () => {
+  document.onpointerup = () => {
     if (gridDragging) {
       gridDragging = false;
       renderCandidates();
+    }
+  };
+  document.onpointermove = (e) => {
+    if (!gridDragging) return;
+    const el = document.elementFromPoint(e.clientX, e.clientY);
+    if (!el || !el.dataset.index || !grid.contains(el)) return;
+    const idx = parseInt(el.dataset.index);
+    if (!gridDraggedCells.has(idx)) {
+      gridDraggedCells.add(idx);
+      inputGrid[idx] = gridDragValue;
+      el.className = 'input-cell' + (inputGrid[idx] ? ' on' : '');
+      playTok();
     }
   };
 }
