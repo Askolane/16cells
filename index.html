@@ -22,7 +22,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="16 Cells">
-<meta name="theme-color" content="#0a0a0a">
+<meta name="theme-color" content="#f2ead8">
 <link rel="manifest" href="manifest.json">
 
 <!-- Favicon: 4x4 grid -->
@@ -32,21 +32,21 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg: #0a0a0a;
-  --surface: #161616;
-  --surface2: #1e1e1e;
-  --border: #2a2a2a;
-  --border-light: #3a3a3a;
-  --text: #e8e6e3;
-  --text-dim: #7a7876;
-  --text-dimmer: #4a4845;
-  --accent: #e8e6e3;
-  --cell-off: #1a1a1a;
-  --cell-on: #e8e6e3;
-  --cell-border: #333;
+  --bg: #f2ead8;
+  --surface: #e8dfc9;
+  --surface2: #ded5bf;
+  --border: #c8bfad;
+  --border-light: #b5ac9a;
+  --text: #2a2622;
+  --text-dim: #7a756d;
+  --text-dimmer: #a09b93;
+  --accent: #2a2622;
+  --cell-off: #e4dbca;
+  --cell-on: #2a2622;
+  --cell-border: #c0b7a5;
   --success: #4ade80;
   --success-dim: #166534;
-  --warning: #fbbf24;
+  --warning: #d4a017;
 }
 
 body {
@@ -76,19 +76,26 @@ body {
 /* Header */
 header {
   width: 100%;
-  max-width: 420px;
   padding: 16px 20px;
+  display: flex;
+  justify-content: center;
+  background: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+
+.header-inner {
+  width: 100%;
+  max-width: 420px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border);
 }
 
 .logo {
   font-family: 'Instrument Serif', serif;
   font-size: 28px;
   letter-spacing: -0.5px;
-  color: var(--text);
+  color: var(--bg);
 }
 
 .logo span { color: var(--text-dim); }
@@ -100,9 +107,9 @@ header {
 }
 
 .icon-btn {
-  background: none;
-  border: 1px solid var(--border);
-  color: var(--text-dim);
+  background: rgba(255,255,255,0.15);
+  border: 1px solid rgba(255,255,255,0.25);
+  color: var(--bg);
   width: 36px;
   height: 36px;
   border-radius: 8px;
@@ -114,14 +121,14 @@ header {
   font-size: 16px;
 }
 
-.icon-btn:hover { border-color: var(--border-light); color: var(--text); }
+.icon-btn:hover { background: rgba(255,255,255,0.25); }
 
 /* Mode tabs */
 .mode-tabs {
   display: flex;
   gap: 0;
   margin-top: 16px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--text-dim);
   border-radius: 8px;
   overflow: hidden;
 }
@@ -140,11 +147,42 @@ header {
 }
 
 .mode-tab.active {
-  background: var(--surface2);
-  color: var(--text);
+  background: var(--text);
+  color: var(--bg);
 }
 
 .mode-tab:not(.active):hover {
+  color: var(--text-dim);
+}
+
+/* Difficulty tabs */
+.difficulty-tabs {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.diff-tab {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  background: none;
+  border: 1.5px solid var(--text-dim);
+  color: var(--text-dim);
+  padding: 5px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.diff-tab.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.diff-tab:not(.active):hover {
   color: var(--text-dim);
 }
 
@@ -257,9 +295,9 @@ header {
 .clear-btn {
   font-family: 'DM Mono', monospace;
   font-size: 12px;
-  background: none;
+  background: var(--surface2);
   border: 1px solid var(--border);
-  color: var(--text-dim);
+  color: var(--text);
   padding: 10px 16px;
   border-radius: 8px;
   cursor: pointer;
@@ -421,7 +459,7 @@ header {
   justify-content: center;
   padding: 10px 16px;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--text-dim);
   border-radius: 10px;
   width: 100%;
 }
@@ -449,7 +487,7 @@ header {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.5);
   z-index: 100;
   justify-content: center;
   align-items: center;
@@ -590,7 +628,7 @@ header {
   display: none;
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.85);
+  background: rgba(0,0,0,0.5);
   z-index: 100;
   justify-content: center;
   align-items: center;
@@ -693,10 +731,12 @@ header {
 <body>
 
 <header>
-  <div class="logo">16 Cells</div>
-  <div class="header-actions">
-    <button class="icon-btn" id="result-btn" onclick="playTap();showResult()" title="Results" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="8" width="3" height="7" rx="0.5"/><rect x="6.5" y="4" width="3" height="11" rx="0.5"/><rect x="12" y="1" width="3" height="14" rx="0.5"/></svg></button>
-    <button class="icon-btn" onclick="playTap();showHelp()" title="How to play">?</button>
+  <div class="header-inner">
+    <div class="logo">16 Cells</div>
+    <div class="header-actions">
+      <button class="icon-btn" id="result-btn" onclick="playTap();showResult()" title="Results" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="8" width="3" height="7" rx="0.5"/><rect x="6.5" y="4" width="3" height="11" rx="0.5"/><rect x="12" y="1" width="3" height="14" rx="0.5"/></svg></button>
+      <button class="icon-btn" onclick="playTap();showHelp()" title="How to play">?</button>
+    </div>
   </div>
 </header>
 
@@ -704,6 +744,12 @@ header {
   <div class="mode-tabs">
     <button class="mode-tab active" id="tab-random" onclick="playTap();switchMode('random')">Endless</button>
     <button class="mode-tab" id="tab-daily" onclick="playTap();switchMode('daily')">Daily</button>
+  </div>
+
+  <div class="difficulty-tabs" id="difficulty-tabs">
+    <button class="diff-tab" id="diff-easy" onclick="playTap();setDifficulty('easy')">Easy</button>
+    <button class="diff-tab active" id="diff-normal" onclick="playTap();setDifficulty('normal')">Normal</button>
+    <button class="diff-tab" id="diff-hard" onclick="playTap();setDifficulty('hard')">Hard</button>
   </div>
 
   <div class="session-stats" id="session-stats" style="display:none">
@@ -726,7 +772,7 @@ header {
   </div>
 
   <div class="hint-area">
-    <div class="hint-label">White cells</div>
+    <div class="hint-label">Black cells</div>
     <div class="hint-value"><span id="hint-count">?</span></div>
   </div>
 
@@ -792,8 +838,8 @@ header {
   <div class="help-card" onclick="event.stopPropagation()">
     <h2>How to play</h2>
     <p>Find the hidden <span class="hl">4&times;4 black &amp; white pattern</span> in 8 turns or fewer.</p>
-    <p>You start with a hint: the <span class="hl">number of white cells</span> in the answer. Tap cells to toggle them, then submit your guess.</p>
-    <p>After each guess, you'll see how many <span class="hl">white cells you got right</span>. Use this to narrow down the possibilities.</p>
+    <p>You start with a hint: the <span class="hl">number of black cells</span> in the answer. Tap cells to toggle them, then submit your guess.</p>
+    <p>After each guess, you'll see how many <span class="hl">black cells you got right</span>. Use this to narrow down the possibilities.</p>
     <p>When 5 or fewer candidates remain, they'll be <span class="hl">revealed</span> &mdash; click one to set it as your next guess.</p>
     <p style="margin-top:16px;margin-bottom:4px;color:var(--text);font-weight:400;font-size:13px;">The information theory behind it</p>
     <p>Each puzzle has a certain number of <span class="hl">bits</span> of information needed to identify the answer. For example, if there are 3,003 possible patterns, you need <span class="hl">~11.6 bits</span> to narrow it down to one.</p>
@@ -928,8 +974,15 @@ function dateToSeed(d) {
 const GRID = 16;
 const COLS = 4;
 const MAX_TURNS = 8;
-const MIN_K = 4;
-const MAX_K = 13;
+
+const DIFFICULTY_RANGES = {
+  easy:   { min: 4, max: 5, min2: 12, max2: 13 },  // extremes, ~1800 candidates
+  normal: { min: 6, max: 7, min2: 10, max2: 11 },   // mid, ~5000-8000 candidates
+  hard:   { min: 8, max: 9 },                         // center, ~11000-12870 candidates
+  daily:  { min: 4, max: 13 }                          // full range
+};
+
+let currentDifficulty = 'normal';
 
 function matchCount(a, b) {
   let m = 0;
@@ -986,6 +1039,11 @@ let won = false;
 let totalBitsGained = 0;
 let currentSeed = 0;
 
+// Drag state
+let gridDragging = false;
+let gridDragValue = null;
+const gridDraggedCells = new Set();
+
 // Session stats (random mode)
 let session = { played: 0, wins: 0, streak: 0, totalTurns: 0, totalBits: 0 };
 
@@ -997,7 +1055,8 @@ function puzzleNumber() {
   return Math.floor((today - epoch) / 86400000);
 }
 
-function generateAnswer(rng) {
+function generateAnswer(rng, difficulty) {
+  const diff = DIFFICULTY_RANGES[difficulty || 'normal'];
   let ans, k;
   do {
     ans = new Array(GRID).fill(0);
@@ -1005,7 +1064,12 @@ function generateAnswer(rng) {
       ans[i] = rng() < 0.5 ? 1 : 0;
     }
     k = countWhite(ans);
-  } while (k < MIN_K || k > MAX_K);
+    // Check two-range difficulties (easy, normal have symmetric ranges)
+    if (diff.min2 !== undefined) {
+      if (!((k >= diff.min && k <= diff.max) || (k >= diff.min2 && k <= diff.max2))) continue;
+      break;
+    }
+  } while (k < diff.min || k > diff.max);
   return { answer: ans, k: k };
 }
 
@@ -1022,7 +1086,8 @@ function initGame() {
     rng = mulberry32(currentSeed);
   }
 
-  const gen = generateAnswer(rng);
+  const diff = currentMode === 'daily' ? 'daily' : currentDifficulty;
+  const gen = generateAnswer(rng, diff);
   answer = gen.answer;
   answerK = gen.k;
   candidates = generateAllCandidates(answerK);
@@ -1174,23 +1239,61 @@ function render() {
   // Mode tabs
   document.getElementById('tab-random').className = 'mode-tab' + (currentMode === 'random' ? ' active' : '');
   document.getElementById('tab-daily').className = 'mode-tab' + (currentMode === 'daily' ? ' active' : '');
+
+  // Difficulty tabs (only in endless mode)
+  const diffTabs = document.getElementById('difficulty-tabs');
+  diffTabs.style.display = currentMode === 'random' ? '' : 'none';
+  document.getElementById('diff-easy').className = 'diff-tab' + (currentDifficulty === 'easy' ? ' active' : '');
+  document.getElementById('diff-normal').className = 'diff-tab' + (currentDifficulty === 'normal' ? ' active' : '');
+  document.getElementById('diff-hard').className = 'diff-tab' + (currentDifficulty === 'hard' ? ' active' : '');
 }
 
 function renderInputGrid() {
   const grid = document.getElementById('input-grid');
   grid.innerHTML = '';
+  grid.style.touchAction = 'none';
+
   for (let i = 0; i < GRID; i++) {
     const cell = document.createElement('div');
     cell.className = 'input-cell' + (inputGrid[i] ? ' on' : '') + (gameOver ? ' locked' : '');
+    cell.dataset.index = i;
+
     if (!gameOver) {
-      cell.addEventListener('click', () => {
-        inputGrid[i] = inputGrid[i] ? 0 : 1;
+      cell.addEventListener('pointerdown', (e) => {
+        e.preventDefault();
+        gridDragging = true;
+        gridDragValue = inputGrid[i] ? 0 : 1;
+        gridDraggedCells.clear();
+        gridDraggedCells.add(i);
+        inputGrid[i] = gridDragValue;
+        cell.className = 'input-cell' + (inputGrid[i] ? ' on' : '');
         playTok();
-        renderInputGrid();
+      });
+
+      cell.addEventListener('pointerenter', () => {
+        if (gridDragging && !gridDraggedCells.has(i)) {
+          gridDraggedCells.add(i);
+          inputGrid[i] = gridDragValue;
+          cell.className = 'input-cell' + (inputGrid[i] ? ' on' : '');
+          playTok();
+        }
       });
     }
     grid.appendChild(cell);
   }
+
+  grid.onpointerup = () => {
+    if (gridDragging) {
+      gridDragging = false;
+      renderCandidates();
+    }
+  };
+  grid.onpointerleave = () => {
+    if (gridDragging) {
+      gridDragging = false;
+      renderCandidates();
+    }
+  };
 }
 
 function renderHistory() {
@@ -1201,7 +1304,7 @@ function renderHistory() {
   guesses.forEach((g, idx) => {
     const fb = feedbacks[idx];
     const j = countWhite(g);
-    const whiteHits = (fb + j + answerK - GRID) / 2;
+    const blackHits = (fb + j + answerK - GRID) / 2;
     const beforeCount = tempCands.length;
     tempCands = filterCandidates(tempCands, g, fb);
     const afterCount = tempCands.length;
@@ -1214,7 +1317,7 @@ function renderHistory() {
       <div class="guess-num">${idx + 1}</div>
       ${miniGridHTML(g)}
       <div class="guess-feedback">
-        <div class="match-display"><b>${whiteHits}</b>/${answerK}</div>
+        <div class="match-display"><b>${blackHits}</b>/${answerK}</div>
         <div class="bits-display">${bits.toFixed(2)} <span>bits</span></div>
         <div class="eliminated">&minus;${eliminated}</div>
       </div>
@@ -1357,7 +1460,7 @@ function showResult() {
       won ? `Daily #${puzzleNumber()}` : 'The answer was:';
   } else {
     document.getElementById('result-subtitle').textContent =
-      won ? 'Endless mode' : 'The answer was:';
+      won ? `Endless · ${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}` : 'The answer was:';
   }
 
   document.getElementById('result-answer').innerHTML = miniGridHTML(answer, 'large');
@@ -1457,6 +1560,13 @@ function nextPuzzle() {
 function switchMode(mode) {
   if (mode === currentMode) return;
   currentMode = mode;
+  closeResult();
+  initGame();
+}
+
+function setDifficulty(diff) {
+  if (diff === currentDifficulty) return;
+  currentDifficulty = diff;
   closeResult();
   initGame();
 }
