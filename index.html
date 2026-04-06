@@ -27,8 +27,12 @@
 
 <!-- Favicon: 4x4 grid -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect x='1' y='1' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='9' y='1' width='6' height='6' rx='1' fill='%23333'/><rect x='17' y='1' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='25' y='1' width='6' height='6' rx='1' fill='%23333'/><rect x='1' y='9' width='6' height='6' rx='1' fill='%23333'/><rect x='9' y='9' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='17' y='9' width='6' height='6' rx='1' fill='%23333'/><rect x='25' y='9' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='1' y='17' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='9' y='17' width='6' height='6' rx='1' fill='%23333'/><rect x='17' y='17' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='25' y='17' width='6' height='6' rx='1' fill='%23333'/><rect x='1' y='25' width='6' height='6' rx='1' fill='%23333'/><rect x='9' y='25' width='6' height='6' rx='1' fill='%23e8e6e3'/><rect x='17' y='25' width='6' height='6' rx='1' fill='%23333'/><rect x='25' y='25' width='6' height='6' rx='1' fill='%23e8e6e3'/></svg>">
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Instrument+Serif&family=Noto+Sans+KR:wght@300;400;500&family=Noto+Sans+JP:wght@300;400;500&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
+:lang(ko) { font-family: 'Noto Sans KR', 'DM Mono', monospace; line-height: 1.5; }
+:lang(ja) { font-family: 'Noto Sans JP', 'DM Mono', monospace; line-height: 1.5; }
+:lang(zh) { font-family: 'Noto Sans SC', 'DM Mono', monospace; line-height: 1.5; }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
@@ -53,6 +57,8 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
+  line-height: 1.5;
   min-height: 100dvh;
   display: flex;
   flex-direction: column;
@@ -118,6 +124,7 @@ header {
   align-items: center;
   justify-content: center;
   transition: all 0.15s;
+  line-height: 1;
   font-size: 16px;
 }
 
@@ -135,6 +142,7 @@ header {
 
 .mode-tab {
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 11px;
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -164,6 +172,7 @@ header {
 
 .diff-tab {
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.5px;
@@ -211,6 +220,7 @@ header {
   font-size: 20px;
   color: var(--text-dim);
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-weight: 300;
 }
 
@@ -276,6 +286,7 @@ header {
 
 .submit-btn {
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 13px;
   font-weight: 500;
   background: var(--text);
@@ -294,6 +305,7 @@ header {
 
 .clear-btn {
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 12px;
   background: var(--surface2);
   border: 1px solid var(--border);
@@ -389,6 +401,7 @@ header {
 .bits-display span {
   font-size: 11px;
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   color: var(--text-dimmer);
   font-weight: 300;
 }
@@ -573,6 +586,7 @@ header {
   line-height: 1.6;
   text-align: left;
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   white-space: pre;
   -webkit-user-select: all;
   user-select: all;
@@ -581,6 +595,7 @@ header {
 
 .share-btn, .next-btn {
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 13px;
   font-weight: 500;
   background: var(--text);
@@ -613,6 +628,7 @@ header {
 .close-result {
   margin-top: 12px;
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 11px;
   background: none;
   border: none;
@@ -633,6 +649,8 @@ header {
   justify-content: center;
   align-items: center;
   padding: 20px;
+  overscroll-behavior: contain;
+  overflow: hidden;
 }
 
 .help-overlay.active { display: flex; }
@@ -646,6 +664,8 @@ header {
   width: 100%;
   max-height: 80vh;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .help-card h2 {
@@ -668,6 +688,7 @@ header {
 .help-close {
   margin-top: 16px;
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 13px;
   background: var(--text);
   color: var(--bg);
@@ -694,6 +715,7 @@ header {
   background: var(--text);
   color: var(--bg);
   font-family: 'DM Mono', monospace;
+  line-height: 1.5;
   font-size: 12px;
   padding: 8px 20px;
   border-radius: 8px;
@@ -735,6 +757,7 @@ header {
     <div class="logo">16 Cells</div>
     <div class="header-actions">
       <button class="icon-btn" id="result-btn" onclick="playTap();showResult()" title="Results" style="display:none"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="8" width="3" height="7" rx="0.5"/><rect x="6.5" y="4" width="3" height="11" rx="0.5"/><rect x="12" y="1" width="3" height="14" rx="0.5"/></svg></button>
+      <button class="icon-btn" id="lang-btn" onclick="playTap();cycleLang()" title="Language">EN</button>
       <button class="icon-btn" onclick="playTap();showHelp()" title="How to play">?</button>
     </div>
   </div>
@@ -742,42 +765,30 @@ header {
 
 <div class="game-container">
   <div class="mode-tabs">
-    <button class="mode-tab active" id="tab-random" onclick="playTap();switchMode('random')">Endless</button>
-    <button class="mode-tab" id="tab-daily" onclick="playTap();switchMode('daily')">Daily</button>
+    <button class="mode-tab active" id="tab-random" onclick="playTap();switchMode('random')" data-i18n="endless">Endless</button>
+    <button class="mode-tab" id="tab-daily" onclick="playTap();switchMode('daily')" data-i18n="daily">Daily</button>
   </div>
 
   <div class="difficulty-tabs" id="difficulty-tabs">
-    <button class="diff-tab" id="diff-easy" onclick="playTap();setDifficulty('easy')">Easy</button>
-    <button class="diff-tab active" id="diff-normal" onclick="playTap();setDifficulty('normal')">Normal</button>
-    <button class="diff-tab" id="diff-hard" onclick="playTap();setDifficulty('hard')">Hard</button>
+    <button class="diff-tab" id="diff-easy" onclick="playTap();setDifficulty('easy')" data-i18n="easy">Easy</button>
+    <button class="diff-tab active" id="diff-normal" onclick="playTap();setDifficulty('normal')" data-i18n="normal">Normal</button>
+    <button class="diff-tab" id="diff-hard" onclick="playTap();setDifficulty('hard')" data-i18n="hard">Hard</button>
   </div>
 
   <div class="session-stats" id="session-stats" style="display:none">
     <div class="session-stat">
       <div class="session-stat-value" id="sess-streak">0</div>
-      <div class="session-stat-label">Streak</div>
-    </div>
-    <div class="session-stat">
-      <div class="session-stat-value" id="sess-played">0</div>
-      <div class="session-stat-label">Played</div>
-    </div>
-    <div class="session-stat">
-      <div class="session-stat-value" id="sess-avg-turns">-</div>
-      <div class="session-stat-label">Avg turns</div>
-    </div>
-    <div class="session-stat">
-      <div class="session-stat-value" id="sess-avg-bits">-</div>
-      <div class="session-stat-label">Bits/turn</div>
+      <div class="session-stat-label" data-i18n="streak">🔥 Streak</div>
     </div>
   </div>
 
   <div class="hint-area">
-    <div class="hint-label">Black cells</div>
+    <div class="hint-label" data-i18n="blackCells">Black cells</div>
     <div class="hint-value"><span id="hint-count">?</span></div>
   </div>
 
   <div class="remaining">
-    <div class="remaining-count"><b id="remaining-num">-</b> possible patterns</div>
+    <div class="remaining-count" id="remaining-count">-</div>
     <div class="bits-progress" id="bits-progress"></div>
   </div>
 
@@ -788,14 +799,14 @@ header {
   </div>
 
   <div class="submit-row">
-    <button class="clear-btn" onclick="clearGrid()">clear</button>
+    <button class="clear-btn" onclick="clearGrid()" data-i18n="clear">clear</button>
     <button class="submit-btn" id="submit-btn">submit</button>
   </div>
 
   <div class="turn-indicator" id="turn-indicator"></div>
 
   <div class="candidates-area" id="candidates-area" style="display:none">
-    <div class="candidates-label">Remaining candidates</div>
+    <div class="candidates-label" data-i18n="remainingCandidates">Remaining candidates</div>
     <div class="candidates-grid" id="candidates-grid"></div>
   </div>
 
@@ -811,50 +822,197 @@ header {
     <div class="result-stats">
       <div class="stat">
         <div class="stat-value" id="stat-turns">-</div>
-        <div class="stat-label">Turns</div>
-      </div>
-      <div class="stat">
-        <div class="stat-value" id="stat-optimal">-</div>
-        <div class="stat-label">Optimal</div>
+        <div class="stat-label" data-i18n="turns">Turns</div>
       </div>
       <div class="stat">
         <div class="stat-value" id="stat-bits">-</div>
-        <div class="stat-label">Bits/turn</div>
+        <div class="stat-label">💡/turn</div>
       </div>
     </div>
     <div class="result-share">
       <div class="share-preview" id="share-preview"></div>
       <div class="result-buttons">
-        <button class="share-btn" id="share-btn" onclick="playTap();copyShare()">Copy</button>
-        <button class="next-btn" id="next-btn" onclick="playTap();nextPuzzle()">Next puzzle</button>
+        <button class="share-btn" id="share-btn" onclick="playTap();copyShare()" data-i18n="copy">Copy</button>
+        <button class="next-btn" id="next-btn" onclick="playTap();nextPuzzle()" data-i18n="nextPuzzle">Next puzzle</button>
       </div>
     </div>
-    <button class="close-result" onclick="playTap();closeResult()">close</button>
+    <button class="close-result" onclick="playTap();closeResult()" data-i18n="close">close</button>
   </div>
 </div>
 
 <!-- Help overlay -->
 <div class="help-overlay" id="help-overlay" onclick="closeHelp(event)">
   <div class="help-card" onclick="event.stopPropagation()">
-    <h2>How to play</h2>
-    <p>Find the hidden <span class="hl">4&times;4 black &amp; white pattern</span> in 8 turns or fewer.</p>
-    <p>You start with a hint: the <span class="hl">number of black cells</span> in the answer. Tap cells to toggle them, then submit your guess.</p>
-    <p>After each guess, you'll see how many <span class="hl">black cells you got right</span>. Use this to narrow down the possibilities.</p>
-    <p>When 5 or fewer candidates remain, they'll be <span class="hl">revealed</span> &mdash; click one to set it as your next guess.</p>
-    <p style="margin-top:16px;margin-bottom:4px;color:var(--text);font-weight:400;font-size:13px;">The information theory behind it</p>
-    <p>Each puzzle has a certain number of <span class="hl">bits</span> of information needed to identify the answer. For example, if there are 3,003 possible patterns, you need <span class="hl">~11.6 bits</span> to narrow it down to one.</p>
-    <p>Every guess you make reveals some bits of information through the feedback. Once your <span class="hl">total gained bits</span> reaches the required amount, only one possibility remains &mdash; the answer is determined.</p>
-    <p>The progress bar below the grid tracks this: <span class="hl">gained / required bits</span>. Maximizing bits per turn is the key to solving in fewer guesses.</p>
-    <p><span class="hl">Endless mode:</span> Infinite puzzles. Keep your streak alive.</p>
-    <p><span class="hl">Daily mode:</span> Same puzzle for everyone. Compare scores.</p>
-    <p style="color:var(--text-dimmer);font-size:11px;margin-top:16px;">Tip: choose patterns that split the remaining possibilities as evenly as possible &mdash; that yields the maximum bits per turn.</p>
-    <button class="help-close" onclick="playTap();closeHelp()">Got it</button>
+    <h2 data-i18n="howToPlay">How to play</h2>
+    <p data-i18n="help1">Find the hidden <span class="hl">4&times;4 pattern</span> in 8 turns or fewer.</p>
+    <p data-i18n="help2">Your only starting clue is <span class="hl">how many cells</span> make up the answer.</p>
+    <p data-i18n="help3">Submit a guess, and you'll be told how many cells <span class="hl">match the answer</span>.</p>
+    <p data-i18n="help4">Each guess earns <span class="hl">💡 Idea Points</span> based on how useful it was. The higher, the better.</p>
+    <p data-i18n="help5">Once your total 💡 reaches the required amount, the answer is <span class="hl">determined</span> &mdash; only one possibility remains.</p>
+    <p style="margin-top:16px;" data-i18n="help6">Go for a long streak! Good luck!</p>
+    <button class="help-close" onclick="playTap();closeHelp()" data-i18n="gotIt">Got it</button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
 <script>
+// ============================================================
+// i18n
+// ============================================================
+const TRANSLATIONS = {
+  en: {
+    endless: 'Endless', daily: 'Daily',
+    easy: 'Easy', normal: 'Normal', hard: 'Hard',
+    blackCells: 'Black cells',
+    possiblePatterns: n => `${n} possible patterns`,
+    clear: 'clear', submit: 'submit', nextPuzzle: 'Next puzzle',
+    remainingCandidates: 'Remaining candidates',
+    streak: '🔥 Streak',
+    turnOf: (t, max) => `Turn ${t} of ${max}`,
+    puzzleNum: n => `Puzzle #${n}`,
+    bitsNeeded: b => `💡 ${b} needed`,
+    bitsProgress: (got, need) => `💡 ${got} / ${need}`,
+    howToPlay: 'How to play',
+    help1: 'Find the hidden <span class="hl">4×4 pattern</span> in 8 turns or fewer.',
+    help2: 'Your only starting clue is <span class="hl">how many cells</span> make up the answer.',
+    help3: 'Submit a guess, and you\'ll be told how many cells <span class="hl">match the answer</span>.',
+    help4: 'Each guess earns <span class="hl">💡 Idea Points</span> based on how useful it was. The higher, the better.',
+    help5: 'Once your total 💡 reaches the required amount, the answer is <span class="hl">determined</span> — only one possibility remains.',
+    help6: 'Go for a long streak! Good luck!',
+    gotIt: 'Got it',
+    solved: 'Solved', notQuite: 'Not quite', theAnswerWas: 'The answer was:',
+    turns: 'Turns',
+    share: 'Share', copy: 'Copy', close: 'close',
+    shared: 'Shared', copiedToClipboard: 'Copied to clipboard',
+    longPress: 'Long press the text above to copy',
+    dailyLabel: n => `16 Cells Daily #${n}`,
+    endlessLabel: diff => `Endless · ${diff}`,
+    diffLabel: { easy: 'Easy', normal: 'Normal', hard: 'Hard' },
+  },
+  ko: {
+    endless: '자유 모드', daily: '일일 도전',
+    easy: '쉬움', normal: '보통', hard: '어려움',
+    blackCells: '정답 칸 수',
+    possiblePatterns: n => `${n}개의 가능한 패턴`,
+    clear: '지우기', submit: '제출', nextPuzzle: '다음 퍼즐',
+    remainingCandidates: '남은 후보',
+    streak: '🔥 연승',
+    turnOf: (t, max) => `${t} / ${max} 턴`,
+    puzzleNum: n => `퍼즐 #${n}`,
+    bitsNeeded: b => `💡 ${b} 필요`,
+    bitsProgress: (got, need) => `💡 ${got} / ${need}`,
+    howToPlay: '도움말',
+    help1: '<span class="hl">4×4칸 위의 패턴</span>을 8턴 안에 찾아보세요.',
+    help2: '시작할 때 주어지는 단서는 <span class="hl">정답 칸의 개수</span>뿐입니다.',
+    help3: '추측을 제출하면 몇 개의 칸이 <span class="hl">정답과 일치</span>하는지 알 수 있습니다.',
+    help4: '추측할 때마다 <span class="hl">💡 아이디어 포인트</span>를 얻으며, 추측이 유용할수록 더 많이 얻습니다.',
+    help5: '💡 합계가 필요한 양에 도달하면 정답이 <span class="hl">하나로 결정</span>됩니다 — 가능성이 하나만 남습니다.',
+    help6: '연속 클리어에 도전해보세요! 행운을 빕니다!',
+    gotIt: 'OK',
+    solved: '성공!', notQuite: '이런..', theAnswerWas: '정답은:',
+    turns: '턴',
+    share: '공유', copy: '공유', close: '닫기',
+    shared: '공유됨', copiedToClipboard: '클립보드에 복사됨',
+    longPress: '위 텍스트를 길게 눌러서 복사하기',
+    dailyLabel: n => `16 Cells 일일 도전 #${n}`,
+    endlessLabel: diff => `자유 · ${diff}`,
+    diffLabel: { easy: '쉬움', normal: '보통', hard: '어려움' },
+  },
+  ja: {
+    endless: '無限', daily: 'デイリー',
+    easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい',
+    blackCells: '黒いマス',
+    possiblePatterns: n => `候補 ${n}通り`,
+    clear: 'クリア', submit: '決定', nextPuzzle: '次へ',
+    remainingCandidates: '残り候補',
+    streak: '🔥 連続',
+    turnOf: (t, max) => `${t} / ${max} ターン`,
+    puzzleNum: n => `デイリー #${n}`,
+    bitsNeeded: b => `💡 ${b} 必要`,
+    bitsProgress: (got, need) => `💡 ${got} / ${need}`,
+    howToPlay: '遊び方',
+    help1: '8手以内で<span class="hl">4×4のパターン</span>を見つけよう。',
+    help2: '最初のヒントは答えの<span class="hl">マスの数</span>だけ。',
+    help3: '推測を決定すると、<span class="hl">正解と一致</span>するマスの数が分かる。',
+    help4: '推測ごとに<span class="hl">💡 アイデアポイント</span>を獲得。多いほど効率が良い証拠。',
+    help5: '💡の合計が必要量に達したとき、正解は<span class="hl">一意に確定</span>している。',
+    help6: '連続クリアを目指そう！',
+    gotIt: 'OK',
+    solved: 'クリア', notQuite: '惜しい', theAnswerWas: '正解:',
+    turns: 'ターン',
+    share: '共有', copy: 'コピー', close: '閉じる',
+    shared: '共有しました', copiedToClipboard: 'コピーしました',
+    longPress: '上のテキストを長押しでコピー',
+    dailyLabel: n => `16 Cells デイリー #${n}`,
+    endlessLabel: diff => `無限 · ${diff}`,
+    diffLabel: { easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい' },
+  },
+  zh: {
+    endless: '无限', daily: '每日',
+    easy: '简单', normal: '中等', hard: '困难',
+    blackCells: '黑色格子',
+    possiblePatterns: n => `剩余 ${n} 种可能`,
+    clear: '清空', submit: '确认', nextPuzzle: '下一题',
+    remainingCandidates: '剩余候选',
+    streak: '🔥 连胜',
+    turnOf: (t, max) => `第 ${t} / ${max} 回合`,
+    puzzleNum: n => `每日 #${n}`,
+    bitsNeeded: b => `💡 需要 ${b}`,
+    bitsProgress: (got, need) => `💡 ${got} / ${need}`,
+    howToPlay: '游戏说明',
+    help1: '在8步以内找出隐藏的<span class="hl">4×4图案</span>。',
+    help2: '唯一的初始提示是答案中<span class="hl">格子的数量</span>。',
+    help3: '提交猜测后，会显示与<span class="hl">答案匹配</span>的格子数。',
+    help4: '每次猜测都会获得<span class="hl">💡 灵感值</span>，数值越高说明猜测越有效。',
+    help5: '当💡累计达到所需值时，答案已被<span class="hl">唯一确定</span>。',
+    help6: '挑战连胜记录！加油！',
+    gotIt: '知道了',
+    solved: '成功', notQuite: '失败', theAnswerWas: '正确答案：',
+    turns: '回合',
+    share: '分享', copy: '复制', close: '关闭',
+    shared: '已分享', copiedToClipboard: '已复制',
+    longPress: '长按上方文字进行复制',
+    dailyLabel: n => `16 Cells 每日 #${n}`,
+    endlessLabel: diff => `无限 · ${diff}`,
+    diffLabel: { easy: '简单', normal: '中等', hard: '困难' },
+  },
+};
+
+const LANG_ORDER = ['en', 'ko', 'ja', 'zh'];
+const LANG_LABELS = { en: 'En', ko: '한', ja: '日', zh: '中' };
+
+let currentLang = localStorage.getItem('16cells_lang') || (() => {
+  const bl = navigator.language?.slice(0, 2);
+  if (bl === 'ko') return 'ko';
+  if (bl === 'ja') return 'ja';
+  if (bl === 'zh') return 'zh';
+  return 'en';
+})();
+
+function t(key, ...args) {
+  const val = TRANSLATIONS[currentLang]?.[key] ?? TRANSLATIONS.en[key];
+  return typeof val === 'function' ? val(...args) : val;
+}
+
+function applyLang() {
+  document.documentElement.lang = currentLang;
+  document.getElementById('lang-btn').textContent = LANG_LABELS[currentLang];
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    const val = TRANSLATIONS[currentLang]?.[key] ?? TRANSLATIONS.en[key];
+    if (typeof val === 'string') el.innerHTML = val;
+  });
+}
+
+function cycleLang() {
+  const idx = LANG_ORDER.indexOf(currentLang);
+  currentLang = LANG_ORDER[(idx + 1) % LANG_ORDER.length];
+  localStorage.setItem('16cells_lang', currentLang);
+  applyLang();
+  render();
+}
+
 // ============================================================
 // Sound system (Web Audio API)
 // ============================================================
@@ -1157,23 +1315,23 @@ function render() {
   document.getElementById('hint-count').textContent = answerK;
 
   // Remaining
-  document.getElementById('remaining-num').textContent = candidates.length;
+  document.getElementById('remaining-count').textContent = t('possiblePatterns', candidates.length);
 
   // Bits progress
   const totalCands = generateAllCandidates(answerK).length;
   const requiredBits = Math.log2(totalCands);
   const bitsEl = document.getElementById('bits-progress');
   if (guesses.length > 0) {
-    bitsEl.textContent = `${totalBitsGained.toFixed(1)} / ${requiredBits.toFixed(1)} bits`;
+    bitsEl.textContent = `💡 ${totalBitsGained.toFixed(1)} / ${requiredBits.toFixed(1)}`;
   } else {
-    bitsEl.textContent = `${requiredBits.toFixed(1)} bits needed`;
+    bitsEl.textContent = t('bitsNeeded', requiredBits.toFixed(1));
   }
 
   // Turn indicator
   const turnsUsed = guesses.length;
   if (!gameOver) {
     document.getElementById('turn-indicator').textContent =
-      `Turn ${turnsUsed + 1} of ${MAX_TURNS}`;
+      t('turnOf', turnsUsed + 1, MAX_TURNS);
   } else {
     document.getElementById('turn-indicator').textContent = '';
   }
@@ -1182,7 +1340,7 @@ function render() {
   const badge = document.getElementById('daily-badge');
   if (currentMode === 'daily') {
     badge.style.display = '';
-    badge.textContent = `Puzzle #${puzzleNumber()}`;
+    badge.textContent = t('puzzleNum', puzzleNumber());
   } else {
     badge.style.display = 'none';
   }
@@ -1192,11 +1350,6 @@ function render() {
   if (currentMode === 'random') {
     statsEl.style.display = '';
     document.getElementById('sess-streak').textContent = session.streak;
-    document.getElementById('sess-played').textContent = session.played;
-    document.getElementById('sess-avg-turns').textContent =
-      session.wins > 0 ? (session.totalTurns / session.wins).toFixed(1) : '-';
-    document.getElementById('sess-avg-bits').textContent =
-      session.wins > 0 ? (session.totalBits / session.wins).toFixed(1) : '-';
   } else {
     statsEl.style.display = 'none';
   }
@@ -1215,15 +1368,15 @@ function render() {
   const btn = document.getElementById('submit-btn');
   if (gameOver && currentMode === 'random') {
     btn.disabled = false;
-    btn.textContent = 'next puzzle';
+    btn.textContent = t('nextPuzzle');
     btn.onclick = function() { playTap(); nextPuzzle(); };
   } else if (gameOver) {
     btn.disabled = true;
-    btn.textContent = 'submit';
+    btn.textContent = t('submit');
     btn.onclick = submitGuess;
   } else {
     btn.disabled = false;
-    btn.textContent = 'submit';
+    btn.textContent = t('submit');
     btn.onclick = submitGuess;
   }
 
@@ -1321,7 +1474,7 @@ function renderHistory() {
       ${miniGridHTML(g)}
       <div class="guess-feedback">
         <div class="match-display"><b>${blackHits}</b>/${answerK}</div>
-        <div class="bits-display">${bits.toFixed(2)} <span>bits</span></div>
+        <div class="bits-display">💡${bits.toFixed(2)}</div>
         <div class="eliminated">&minus;${eliminated}</div>
       </div>
     `;
@@ -1450,34 +1603,28 @@ function showResult() {
   const turnsUsed = guesses.length;
   const bitsPerTurn = turnsUsed > 0 ? (totalBitsGained / turnsUsed) : 0;
 
-  // Theoretical minimum
-  const totalCandidates = generateAllCandidates(answerK).length;
-  const totalBits = Math.log2(totalCandidates);
-  const maxBitsPerTurn = Math.log2(GRID + 1);
-  const theoretical = Math.ceil(totalBits / maxBitsPerTurn);
-
-  document.getElementById('result-title').textContent = won ? 'Solved' : 'Not quite';
+  document.getElementById('result-title').textContent = won ? t('solved') : t('notQuite');
 
   if (currentMode === 'daily') {
     document.getElementById('result-subtitle').textContent =
-      won ? `Daily #${puzzleNumber()}` : 'The answer was:';
+      won ? t('dailyLabel', puzzleNumber()) : t('theAnswerWas');
   } else {
     document.getElementById('result-subtitle').textContent =
-      won ? `Endless · ${currentDifficulty.charAt(0).toUpperCase() + currentDifficulty.slice(1)}` : 'The answer was:';
+      won ? t('endlessLabel', t('diffLabel')[currentDifficulty]) : t('theAnswerWas');
   }
 
   document.getElementById('result-answer').innerHTML = miniGridHTML(answer, 'large');
 
   document.getElementById('stat-turns').textContent = won ? turnsUsed : 'X';
-  document.getElementById('stat-optimal').textContent = theoretical;
   document.getElementById('stat-bits').textContent = bitsPerTurn.toFixed(1);
 
   // Share text
-  const prefix = currentMode === 'daily' ? `16 Cells Daily #${puzzleNumber()}` : '16 Cells';
-  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/8\n\n${generateShareGrid()}\n\nBits/turn: ${bitsPerTurn.toFixed(2)}`;
+  const prefix = currentMode === 'daily' ? t('dailyLabel', puzzleNumber()) : '16 Cells';
+  const streakText = currentMode === 'random' && won ? `\n🔥 Streak: ${session.streak}` : '';
+  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/8\n\n${generateShareGrid()}\n\n💡/turn: ${bitsPerTurn.toFixed(2)}${streakText}`;
   document.getElementById('share-preview').textContent = shareText;
   document.getElementById('share-preview').dataset.text = shareText;
-  document.getElementById('share-btn').textContent = navigator.share ? 'Share' : 'Copy';
+  document.getElementById('share-btn').textContent = navigator.share ? t('share') : t('copy');
 
   // Next button
   document.getElementById('next-btn').style.display = currentMode === 'random' ? '' : 'none';
@@ -1491,9 +1638,9 @@ function generateShareGrid() {
     tempCands = filterCandidates(tempCands, g, fb);
     const afterCount = tempCands.length;
     const bits = beforeCount > 0 && afterCount > 0 ? Math.log2(beforeCount / afterCount) : 0;
-    const barLen = Math.round(bits / 4.09 * 5); // max ~4.09 bits = 5 blocks
+    const barLen = Math.round(bits / 4.09 * 5);
     const bar = '\u2588'.repeat(Math.min(barLen, 5)) + '\u2591'.repeat(5 - Math.min(barLen, 5));
-    return `Q${String(i+1).padStart(2,' ')} ${bar} ${bits.toFixed(2)}b`;
+    return `Q${String(i+1).padStart(2,' ')} ${bar} 💡${bits.toFixed(2)}`;
   }).join('\n');
 }
 
@@ -1502,7 +1649,7 @@ function copyShare() {
 
   if (navigator.share) {
     navigator.share({ text }).then(() => {
-      showToast('Shared');
+      showToast(t('shared'));
     }).catch(e => {
       if (e.name !== 'AbortError') clipboardCopy(text);
     });
@@ -1515,7 +1662,7 @@ function copyShare() {
 function clipboardCopy(text) {
   if (navigator.clipboard && window.isSecureContext) {
     navigator.clipboard.writeText(text).then(() => {
-      showToast('Copied to clipboard');
+      showToast(t('copiedToClipboard'));
     }).catch(() => {
       textareaCopy(text);
     });
@@ -1545,7 +1692,7 @@ function textareaCopy(text) {
   let ok = false;
   try { ok = document.execCommand('copy'); } catch(e) {}
   document.body.removeChild(ta);
-  showToast(ok ? 'Copied to clipboard' : 'Long press the text above to copy');
+  showToast(ok ? t('copiedToClipboard') : t('longPress'));
 }
 
 function closeResult() {
@@ -1579,11 +1726,13 @@ function setDifficulty(diff) {
 // ============================================================
 function showHelp() {
   document.getElementById('help-overlay').classList.add('active');
+  document.body.style.overflow = 'hidden';
 }
 
 function closeHelp(e) {
   if (!e || e.target === document.getElementById('help-overlay')) {
     document.getElementById('help-overlay').classList.remove('active');
+    document.body.style.overflow = '';
   }
 }
 
@@ -1601,6 +1750,7 @@ function showToast(msg) {
 // Init
 // ============================================================
 loadSession();
+applyLang();
 initGame();
 
 if (!localStorage.getItem('16cells_visited')) {
