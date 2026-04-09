@@ -773,6 +773,7 @@ header {
     <button class="diff-tab" id="diff-easy" onclick="playTap();setDifficulty('easy')" data-i18n="easy">Easy</button>
     <button class="diff-tab active" id="diff-normal" onclick="playTap();setDifficulty('normal')" data-i18n="normal">Normal</button>
     <button class="diff-tab" id="diff-hard" onclick="playTap();setDifficulty('hard')" data-i18n="hard">Hard</button>
+    <button class="diff-tab" id="diff-extreme" onclick="playTap();setDifficulty('extreme')" data-i18n="extreme">Extreme</button>
   </div>
 
   <div class="session-stats" id="session-stats" style="display:none">
@@ -863,7 +864,7 @@ header {
 const TRANSLATIONS = {
   en: {
     endless: 'Endless', daily: 'Daily',
-    easy: 'Easy', normal: 'Normal', hard: 'Hard',
+    easy: 'Easy', normal: 'Normal', hard: 'Hard', extreme: 'Extreme',
     blackCells: 'Black cells',
     possiblePatterns: n => `${n} possible patterns`,
     clear: 'clear', submit: 'submit', nextPuzzle: 'Next puzzle',
@@ -888,11 +889,11 @@ const TRANSLATIONS = {
     longPress: 'Long press the text above to copy',
     dailyLabel: n => `16 Cells Daily #${n}`,
     endlessLabel: diff => `Endless · ${diff}`,
-    diffLabel: { easy: 'Easy', normal: 'Normal', hard: 'Hard' },
+    diffLabel: { easy: 'Easy', normal: 'Normal', hard: 'Hard', extreme: 'Extreme' },
   },
   ko: {
     endless: '자유 모드', daily: '일일 도전',
-    easy: '쉬움', normal: '보통', hard: '어려움',
+    easy: '쉬움', normal: '보통', hard: '어려움', extreme: '극한',
     blackCells: '정답 칸 수',
     possiblePatterns: n => `${n}개의 가능한 패턴`,
     clear: '지우기', submit: '제출', nextPuzzle: '다음 퍼즐',
@@ -917,11 +918,11 @@ const TRANSLATIONS = {
     longPress: '위 텍스트를 길게 눌러서 복사하기',
     dailyLabel: n => `16 Cells 일일 도전 #${n}`,
     endlessLabel: diff => `자유 · ${diff}`,
-    diffLabel: { easy: '쉬움', normal: '보통', hard: '어려움' },
+    diffLabel: { easy: '쉬움', normal: '보통', hard: '어려움', extreme: '극한' },
   },
   ja: {
     endless: '無限', daily: 'デイリー',
-    easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい',
+    easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい', extreme: '極限',
     blackCells: '黒いマス',
     possiblePatterns: n => `候補 ${n}通り`,
     clear: 'クリア', submit: '決定', nextPuzzle: '次へ',
@@ -946,11 +947,11 @@ const TRANSLATIONS = {
     longPress: '上のテキストを長押しでコピー',
     dailyLabel: n => `16 Cells デイリー #${n}`,
     endlessLabel: diff => `無限 · ${diff}`,
-    diffLabel: { easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい' },
+    diffLabel: { easy: 'かんたん', normal: 'ふつう', hard: 'むずかしい', extreme: '極限' },
   },
   zh: {
     endless: '无限', daily: '每日',
-    easy: '简单', normal: '中等', hard: '困难',
+    easy: '简单', normal: '中等', hard: '困难', extreme: '极限',
     blackCells: '黑色格子',
     possiblePatterns: n => `剩余 ${n} 种可能`,
     clear: '清空', submit: '确认', nextPuzzle: '下一题',
@@ -975,7 +976,7 @@ const TRANSLATIONS = {
     longPress: '长按上方文字进行复制',
     dailyLabel: n => `16 Cells 每日 #${n}`,
     endlessLabel: diff => `无限 · ${diff}`,
-    diffLabel: { easy: '简单', normal: '中等', hard: '困难' },
+    diffLabel: { easy: '简单', normal: '中等', hard: '困难', extreme: '极限' },
   },
 };
 
@@ -1131,14 +1132,19 @@ function dateToSeed(d) {
 // ============================================================
 const GRID = 16;
 const COLS = 4;
-const MAX_TURNS = 8;
 
 const DIFFICULTY_RANGES = {
-  easy:   { min: 4, max: 5, min2: 12, max2: 13 },  // extremes, ~1800 candidates
-  normal: { min: 6, max: 7, min2: 10, max2: 11 },   // mid, ~5000-8000 candidates
-  hard:   { min: 8, max: 9 },                         // center, ~11000-12870 candidates
-  daily:  { min: 4, max: 13 }                          // full range
+  easy:    { min: 3, max: 4, min2: 12, max2: 13, turns: 10 },
+  normal:  { min: 5, max: 6, min2: 10, max2: 11, turns: 9 },
+  hard:    { min: 7, max: 7, min2: 9,  max2: 9,  turns: 8 },
+  extreme: { min: 8, max: 8,                      turns: 7 },
+  daily:   { min: 4, max: 13,                     turns: 9 }
 };
+
+function getMaxTurns() {
+  const diff = currentMode === 'daily' ? 'daily' : currentDifficulty;
+  return DIFFICULTY_RANGES[diff]?.turns ?? 8;
+}
 
 let currentDifficulty = 'normal';
 
@@ -1331,7 +1337,7 @@ function render() {
   const turnsUsed = guesses.length;
   if (!gameOver) {
     document.getElementById('turn-indicator').textContent =
-      t('turnOf', turnsUsed + 1, MAX_TURNS);
+      t('turnOf', turnsUsed + 1, getMaxTurns());
   } else {
     document.getElementById('turn-indicator').textContent = '';
   }
@@ -1399,6 +1405,7 @@ function render() {
   document.getElementById('diff-easy').className = 'diff-tab' + (currentDifficulty === 'easy' ? ' active' : '');
   document.getElementById('diff-normal').className = 'diff-tab' + (currentDifficulty === 'normal' ? ' active' : '');
   document.getElementById('diff-hard').className = 'diff-tab' + (currentDifficulty === 'hard' ? ' active' : '');
+  document.getElementById('diff-extreme').className = 'diff-tab' + (currentDifficulty === 'extreme' ? ' active' : '');
 }
 
 function renderInputGrid() {
@@ -1496,7 +1503,7 @@ function renderCandidates() {
   const area = document.getElementById('candidates-area');
   const grid = document.getElementById('candidates-grid');
 
-  if (candidates.length > 5 || candidates.length <= 0 || gameOver) {
+  if (candidates.length > 5 || candidates.length <= 0 || gameOver || currentDifficulty === 'extreme') {
     area.style.display = 'none';
     return;
   }
@@ -1523,7 +1530,7 @@ function renderCandidates() {
 // ============================================================
 function submitGuess() {
   if (gameOver) return;
-  if (guesses.length >= MAX_TURNS) return;
+  if (guesses.length >= getMaxTurns()) return;
 
   playTick();
 
@@ -1545,7 +1552,7 @@ function submitGuess() {
   if (fb === GRID) {
     won = true;
     gameOver = true;
-  } else if (guesses.length >= MAX_TURNS) {
+  } else if (guesses.length >= getMaxTurns()) {
     gameOver = true;
     won = false;
   }
@@ -1620,8 +1627,9 @@ function showResult() {
 
   // Share text
   const prefix = currentMode === 'daily' ? t('dailyLabel', puzzleNumber()) : '16 Cells';
+  const diffSuffix = currentMode === 'random' ? ` | ${t('diffLabel')[currentDifficulty]}` : '';
   const streakText = currentMode === 'random' && won ? `\n🔥 Streak: ${session.streak}` : '';
-  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/8\n\n${generateShareGrid()}\n\n💡/turn: ${bitsPerTurn.toFixed(2)}${streakText}`;
+  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/${getMaxTurns()}${diffSuffix}\n\n${generateShareGrid()}\n\n💡/turn: ${bitsPerTurn.toFixed(2)}${streakText}`;
   document.getElementById('share-preview').textContent = shareText;
   document.getElementById('share-preview').dataset.text = shareText;
   document.getElementById('share-btn').textContent = navigator.share ? t('share') : t('copy');
