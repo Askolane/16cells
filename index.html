@@ -319,6 +319,25 @@ header {
 
 .clear-btn:hover { border-color: var(--border-light); color: var(--text); }
 
+.hint-btn {
+  font-family: 'DM Mono', monospace;
+  line-height: 1.5;
+  font-size: 12px;
+  background: none;
+  border: 1.5px solid var(--text-dim);
+  color: var(--text-dim);
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  touch-action: manipulation;
+  white-space: nowrap;
+}
+
+.hint-btn:hover { border-color: var(--text); color: var(--text); }
+.hint-btn:disabled { opacity: 0.2; cursor: default; }
+.hint-btn.used { opacity: 0.3; cursor: default; text-decoration: line-through; }
+
 /* Guess history */
 .history {
   margin-top: 24px;
@@ -803,6 +822,7 @@ header {
   <div class="submit-row">
     <button class="clear-btn" onclick="clearGrid()" data-i18n="clear">clear</button>
     <button class="submit-btn" id="submit-btn">submit</button>
+    <button class="hint-btn" id="hint-btn" onclick="useHint()" title="+1 turn">+1</button>
   </div>
 
   <div class="turn-indicator" id="turn-indicator"></div>
@@ -1144,7 +1164,21 @@ const DIFFICULTY_RANGES = {
 
 function getMaxTurns() {
   const diff = currentMode === 'daily' ? 'daily' : currentDifficulty;
+  const base = DIFFICULTY_RANGES[diff]?.turns ?? 8;
+  return base + (bonusTurnGranted ? 1 : 0);
+}
+
+function baseTurns() {
+  const diff = currentMode === 'daily' ? 'daily' : currentDifficulty;
   return DIFFICULTY_RANGES[diff]?.turns ?? 8;
+}
+
+function turnLimitDisplay() {
+  return bonusTurnGranted ? `${baseTurns()}+1` : `${baseTurns()}`;
+}
+
+function hintAllowed() {
+  return currentMode === 'random' && currentDifficulty !== 'extreme';
 }
 
 let currentDifficulty = 'normal';
@@ -1203,6 +1237,7 @@ let gameOver = false;
 let won = false;
 let totalBitsGained = 0;
 let currentSeed = 0;
+let bonusTurnGranted = false;
 
 // Drag state
 let gridDragging = false;
@@ -1246,26 +1281,21 @@ function initGame() {
     today.setHours(0,0,0,0);
     currentSeed = dateToSeed(today);
     rng = mulberry32(currentSeed);
-  } else {
-    currentSeed = Date.now() ^ (Math.random() * 0xFFFFFFFF >>> 0);
-    rng = mulberry32(currentSeed);
-  }
 
-  const diff = currentMode === 'daily' ? 'daily' : currentDifficulty;
-  const gen = generateAnswer(rng, diff);
-  answer = gen.answer;
-  answerK = gen.k;
-  candidates = generateAllCandidates(answerK);
+    const diff = 'daily';
+    const gen = generateAnswer(rng, diff);
+    answer = gen.answer;
+    answerK = gen.k;
+    candidates = generateAllCandidates(answerK);
 
-  guesses = [];
-  feedbacks = [];
-  inputGrid = new Array(GRID).fill(0);
-  gameOver = false;
-  won = false;
-  totalBitsGained = 0;
+    guesses = [];
+    feedbacks = [];
+    inputGrid = new Array(GRID).fill(0);
+    gameOver = false;
+    won = false;
+    totalBitsGained = 0;
+    bonusTurnGranted = false;
 
-  // Load saved state for daily
-  if (currentMode === 'daily') {
     const saved = localStorage.getItem('16cells_daily_' + puzzleNumber());
     if (saved) {
       try {
@@ -1286,6 +1316,50 @@ function initGame() {
         won = data.won || false;
       } catch(e) {}
     }
+
+  } else {
+    // Random mode: try to restore saved state for this difficulty
+    const savedKey = `16cells_rand_${currentDifficulty}`;
+    const saved = localStorage.getItem(savedKey);
+
+    if (saved) {
+      try {
+        const data = JSON.parse(saved);
+        currentSeed = data.seed;
+        const gen = generateAnswer(mulberry32(currentSeed), currentDifficulty);
+        answer = gen.answer;
+        answerK = gen.k;
+        candidates = generateAllCandidates(answerK);
+
+        guesses = [];
+        feedbacks = [];
+        inputGrid = new Array(GRID).fill(0);
+        gameOver = false;
+        won = false;
+        totalBitsGained = 0;
+        bonusTurnGranted = data.bonusTurnGranted || false;
+
+        let tempCandidates = generateAllCandidates(answerK);
+        data.guesses.forEach((g, i) => {
+          const fb = data.feedbacks[i];
+          guesses.push(g);
+          feedbacks.push(fb);
+          const before = tempCandidates.length;
+          tempCandidates = filterCandidates(tempCandidates, g, fb);
+          if (before > 0 && tempCandidates.length > 0) {
+            totalBitsGained += Math.log2(before / tempCandidates.length);
+          }
+        });
+        candidates = tempCandidates;
+        gameOver = data.gameOver || false;
+        won = data.won || false;
+      } catch(e) {
+        localStorage.removeItem(savedKey);
+        startFreshRandom();
+      }
+    } else {
+      startFreshRandom();
+    }
   }
 
   render();
@@ -1295,10 +1369,29 @@ function initGame() {
   }
 }
 
+function startFreshRandom() {
+  currentSeed = Date.now() ^ (Math.random() * 0xFFFFFFFF >>> 0);
+  const gen = generateAnswer(mulberry32(currentSeed), currentDifficulty);
+  answer = gen.answer;
+  answerK = gen.k;
+  candidates = generateAllCandidates(answerK);
+  guesses = [];
+  feedbacks = [];
+  inputGrid = new Array(GRID).fill(0);
+  gameOver = false;
+  won = false;
+  totalBitsGained = 0;
+  bonusTurnGranted = false;
+}
+
 function saveState() {
   if (currentMode === 'daily') {
     localStorage.setItem('16cells_daily_' + puzzleNumber(), JSON.stringify({
       guesses, feedbacks, gameOver, won
+    }));
+  } else {
+    localStorage.setItem(`16cells_rand_${currentDifficulty}`, JSON.stringify({
+      seed: currentSeed, guesses, feedbacks, gameOver, won, bonusTurnGranted
     }));
   }
 }
@@ -1336,11 +1429,14 @@ function render() {
 
   // Turn indicator
   const turnsUsed = guesses.length;
+  const turnEl = document.getElementById('turn-indicator');
   if (!gameOver) {
-    document.getElementById('turn-indicator').textContent =
-      t('turnOf', turnsUsed + 1, getMaxTurns());
+    const limitStr = bonusTurnGranted
+      ? `${baseTurns()} <b style="color:var(--text)">+1</b>`
+      : `${baseTurns()}`;
+    turnEl.innerHTML = t('turnOf', turnsUsed + 1, limitStr);
   } else {
-    document.getElementById('turn-indicator').textContent = '';
+    turnEl.innerHTML = '';
   }
 
   // Daily badge
@@ -1367,10 +1463,17 @@ function render() {
     nextBtn.style.display = currentMode === 'random' ? '' : 'none';
   }
 
+  // Hint button
+  const hintBtn = document.getElementById('hint-btn');
+  if (hintBtn) {
+    const allowed = hintAllowed();
+    hintBtn.style.display = (!allowed || gameOver) ? 'none' : '';
+    hintBtn.disabled = bonusTurnGranted;
+  }
+
   // Input grid
   renderInputGrid();
 
-  // Submit button
   // Submit button
   const btn = document.getElementById('submit-btn');
   if (gameOver && currentMode === 'random') {
@@ -1605,6 +1708,13 @@ function submitGuess() {
   }
 }
 
+function useHint() {
+  if (bonusTurnGranted || gameOver) return;
+  bonusTurnGranted = true;
+  playTap();
+  render();
+}
+
 function clearGrid() {
   if (gameOver) return;
   playTick();
@@ -1642,7 +1752,7 @@ function showResult() {
   const prefix = currentMode === 'daily' ? t('dailyLabel', puzzleNumber()) : '16 Cells';
   const diffSuffix = currentMode === 'random' ? ` | ${t('diffLabel')[currentDifficulty]}` : '';
   const streakText = currentMode === 'random' && won ? `\n🔥 Streak: ${session.streak}` : '';
-  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/${getMaxTurns()}${diffSuffix}\n\n${generateShareGrid()}\n\n💡/turn: ${bitsPerTurn.toFixed(2)}${streakText}`;
+  const shareText = `${prefix} ${won ? turnsUsed : 'X'}/${turnLimitDisplay()}${diffSuffix}\n\n${generateShareGrid()}\n\n💡/turn: ${bitsPerTurn.toFixed(2)}${streakText}`;
   document.getElementById('share-preview').textContent = shareText;
   document.getElementById('share-preview').dataset.text = shareText;
   document.getElementById('share-btn').textContent = navigator.share ? t('share') : t('copy');
@@ -1722,6 +1832,7 @@ function closeResult() {
 
 function nextPuzzle() {
   closeResult();
+  localStorage.removeItem(`16cells_rand_${currentDifficulty}`);
   initGame();
 }
 
