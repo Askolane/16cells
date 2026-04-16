@@ -302,6 +302,7 @@ header {
 .submit-btn:hover { opacity: 0.85; }
 .submit-btn:active { transform: scale(0.97); }
 .submit-btn:disabled { opacity: 0.2; cursor: default; transform: none; }
+.submit-btn, .clear-btn { touch-action: manipulation; }
 
 .clear-btn {
   font-family: 'DM Mono', monospace;
@@ -1439,7 +1440,19 @@ function renderInputGrid() {
       renderCandidates();
     }
   };
+  grid.onpointercancel = () => {
+    if (gridDragging) {
+      gridDragging = false;
+      renderCandidates();
+    }
+  };
   document.onpointerup = () => {
+    if (gridDragging) {
+      gridDragging = false;
+      renderCandidates();
+    }
+  };
+  document.onpointercancel = () => {
     if (gridDragging) {
       gridDragging = false;
       renderCandidates();
@@ -1503,7 +1516,7 @@ function renderCandidates() {
   const area = document.getElementById('candidates-area');
   const grid = document.getElementById('candidates-grid');
 
-  if (candidates.length > 5 || candidates.length <= 0 || gameOver || currentDifficulty === 'extreme') {
+  if (candidates.length > 5 || candidates.length <= 0 || gameOver || (currentMode === 'random' && currentDifficulty === 'extreme')) {
     area.style.display = 'none';
     return;
   }
