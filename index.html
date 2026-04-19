@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <title>Halve!</title>
 
-<meta name="description" content="A hardcore pattern puzzle powered by information theory. Find the hidden 4×4 grid in 8 turns.">
+<meta name="description" content="A hardcore pattern puzzle powered by information theory. Find the hidden 4×4 grid in as few turns as possible.">
 <meta property="og:title" content="Halve!">
-<meta property="og:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 8 turns.">
+<meta property="og:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in as few turns as possible.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://askolane.github.io/16cells/">
 <meta property="og:image" content="https://askolane.github.io/16cells/og-image.png">
@@ -15,7 +15,7 @@
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Halve!">
-<meta name="twitter:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in 8 turns.">
+<meta name="twitter:description" content="A hardcore pattern puzzle. Find the hidden 4×4 grid in as few turns as possible.">
 <meta name="twitter:image" content="https://askolane.github.io/16cells/og-image.png">
 
 <!-- PWA -->
@@ -954,7 +954,7 @@ header {
 <div class="help-overlay" id="help-overlay" onclick="closeHelp(event)">
   <div class="help-card" onclick="event.stopPropagation()">
     <h2 data-i18n="howToPlay">How to play</h2>
-    <p data-i18n="help1">Find the hidden <span class="hl">4&times;4 pattern</span> in 8 turns or fewer.</p>
+    <p data-i18n="help1">Find the hidden <span class="hl">4&times;4 pattern</span> in as few turns as possible.</p>
     <p data-i18n="help2">Your only starting clue is <span class="hl">how many cells</span> make up the answer.</p>
     <p data-i18n="help3">Submit a guess, and you'll be told how many cells <span class="hl">match the answer</span>.</p>
     <p data-i18n="help4">Each guess earns <span class="hl">💡 Idea Points</span> based on how useful it was. The higher, the better.</p>
@@ -996,7 +996,7 @@ const TRANSLATIONS = {
     bitsNeeded: b => `💡 ${b} needed`,
     bitsProgress: (got, need) => `💡 ${got} / ${need}`,
     howToPlay: 'How to play',
-    help1: 'Find the hidden <span class="hl">4×4 pattern</span> in 8 turns or fewer.',
+    help1: 'Find the hidden <span class="hl">4×4 pattern</span> in as few turns as possible.',
     help2: 'Your only starting clue is <span class="hl">how many cells</span> make up the answer.',
     help3: 'Submit a guess, and you\'ll be told how many cells <span class="hl">match the answer</span>.',
     help4: 'Each guess earns <span class="hl">💡 Idea Points</span> based on how useful it was. The higher, the better.',
@@ -1025,7 +1025,7 @@ const TRANSLATIONS = {
     bitsNeeded: b => `💡 ${b} 필요`,
     bitsProgress: (got, need) => `💡 ${got} / ${need}`,
     howToPlay: '도움말',
-    help1: '<span class="hl">4×4칸 위의 패턴</span>을 8턴 안에 찾아보세요.',
+    help1: '<span class="hl">4×4칸 위의 패턴</span>을 최소한의 턴으로 찾아보세요.',
     help2: '시작할 때 주어지는 단서는 <span class="hl">정답 칸의 개수</span>뿐입니다.',
     help3: '추측을 제출하면 몇 개의 칸이 <span class="hl">정답과 일치</span>하는지 알 수 있습니다.',
     help4: '추측할 때마다 <span class="hl">💡 아이디어 포인트</span>를 얻으며, 추측이 유용할수록 더 많이 얻습니다.',
@@ -1054,7 +1054,7 @@ const TRANSLATIONS = {
     bitsNeeded: b => `💡 ${b} 必要`,
     bitsProgress: (got, need) => `💡 ${got} / ${need}`,
     howToPlay: '遊び方',
-    help1: '8手以内で<span class="hl">4×4のパターン</span>を見つけよう。',
+    help1: 'できるだけ少ない手数で<span class="hl">4×4のパターン</span>を見つけよう。',
     help2: '最初のヒントは答えの<span class="hl">マスの数</span>だけ。',
     help3: '推測を決定すると、<span class="hl">正解と一致</span>するマスの数が分かる。',
     help4: '推測ごとに<span class="hl">💡 アイデアポイント</span>を獲得。多いほど効率が良い証拠。',
@@ -1083,7 +1083,7 @@ const TRANSLATIONS = {
     bitsNeeded: b => `💡 需要 ${b}`,
     bitsProgress: (got, need) => `💡 ${got} / ${need}`,
     howToPlay: '游戏说明',
-    help1: '在8步以内找出隐藏的<span class="hl">4×4图案</span>。',
+    help1: '用尽可能少的步数找出隐藏的<span class="hl">4×4图案</span>。',
     help2: '唯一的初始提示是答案中<span class="hl">格子的数量</span>。',
     help3: '提交猜测后，会显示与<span class="hl">答案匹配</span>的格子数。',
     help4: '每次猜测都会获得<span class="hl">💡 灵感值</span>，数值越高说明猜测越有效。',
