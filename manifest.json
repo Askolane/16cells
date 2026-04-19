@@ -1,13 +1,13 @@
 {
-  "name": "16 Cells",
-  "short_name": "16 Cells",
-  "description": "A hardcore pattern puzzle powered by information theory. Find the hidden 4×4 grid in 8 turns.",
+  "name": "Halve !",
+  "short_name": "Halve !",
+  "description": "A hardcore pattern puzzle powered by information theory. Find the hidden 4×4 grid in as few turns as possible.",
   "start_url": "/16cells/",
   "scope": "/16cells/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#0a0a0a",
-  "theme_color": "#0a0a0a",
+  "background_color": "#f2ead8",
+  "theme_color": "#f2ead8",
   "icons": [
     {
       "src": "icon-192.png",
