@@ -1,4 +1,4 @@
-const CACHE_NAME = '16cells-v12';
+const CACHE_NAME = '16cells-v13';
 const ASSETS = [
   '/16cells/',
   '/16cells/index.html',
